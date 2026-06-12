@@ -1,8 +1,12 @@
-// utils.js
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+
+// dist/worker.js
 function escapeHtml(text) {
   if (!text) return "";
   return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
+__name(escapeHtml, "escapeHtml");
 function getCookie(request, name) {
   const cookieString = request.headers.get("Cookie");
   if (!cookieString) return null;
@@ -15,25 +19,28 @@ function getCookie(request, name) {
   }
   return null;
 }
+__name(getCookie, "getCookie");
 function setCookie(response, name, value, days = 7) {
   const expires = new Date(Date.now() + days * 864e5).toUTCString();
   const cookieString = `${name}=${value}; expires=${expires}; path=/; HttpOnly; SameSite=Lax`;
   response.headers.append("Set-Cookie", cookieString);
 }
+__name(setCookie, "setCookie");
 function isAuthenticated(request) {
   const token = getCookie(request, "admin_token");
   return token === "secret-admin-token";
 }
-
-// node_modules/marked/lib/marked.esm.js
+__name(isAuthenticated, "isAuthenticated");
 function M() {
   return { async: false, breaks: false, extensions: null, gfm: true, hooks: null, pedantic: false, renderer: null, silent: false, tokenizer: null, walkTokens: null };
 }
+__name(M, "M");
 var T = M();
 function N(l3) {
   T = l3;
 }
-var _ = { exec: () => null };
+__name(N, "N");
+var _ = { exec: /* @__PURE__ */ __name(() => null, "exec") };
 function E(l3) {
   let e = [];
   return (t) => {
@@ -41,13 +48,15 @@ function E(l3) {
     return s || (s = l3(n), e[n] = s), s;
   };
 }
+__name(E, "E");
 function d(l3, e = "") {
-  let t = typeof l3 == "string" ? l3 : l3.source, n = { replace: (s, r) => {
+  let t = typeof l3 == "string" ? l3 : l3.source, n = { replace: /* @__PURE__ */ __name((s, r) => {
     let i = typeof r == "string" ? r : r.source;
     return i = i.replace(m.caret, "$1"), t = t.replace(s, i), n;
-  }, getRegex: () => new RegExp(t, e) };
+  }, "replace"), getRegex: /* @__PURE__ */ __name(() => new RegExp(t, e), "getRegex") };
   return n;
 }
+__name(d, "d");
 var Te = ((l3 = "") => {
   try {
     return !!new RegExp("(?<=1)(?<!1)" + l3);
@@ -55,7 +64,7 @@ var Te = ((l3 = "") => {
     return false;
   }
 })();
-var m = { codeRemoveIndent: /^(?: {1,4}| {0,3}\t)/gm, outputLinkReplace: /\\([\[\]])/g, indentCodeCompensation: /^(\s+)(?:```)/, beginningSpace: /^\s+/, endingHash: /#$/, startingSpaceChar: /^ /, endingSpaceChar: / $/, nonSpaceChar: /[^ ]/, newLineCharGlobal: /\n/g, tabCharGlobal: /\t/g, multipleSpaceGlobal: /\s+/g, blankLine: /^[ \t]*$/, doubleBlankLine: /\n[ \t]*\n[ \t]*$/, blockquoteStart: /^ {0,3}>/, blockquoteSetextReplace: /\n {0,3}((?:=+|-+) *)(?=\n|$)/g, blockquoteSetextReplace2: /^ {0,3}>[ \t]?/gm, listReplaceNesting: /^ {1,4}(?=( {4})*[^ ])/g, listIsTask: /^\[[ xX]\] +\S/, listReplaceTask: /^\[[ xX]\] +/, listTaskCheckbox: /\[[ xX]\]/, anyLine: /\n.*\n/, hrefBrackets: /^<(.*)>$/, tableDelimiter: /[:|]/, tableAlignChars: /^\||\| *$/g, tableRowBlankLine: /\n[ \t]*$/, tableAlignRight: /^ *-+: *$/, tableAlignCenter: /^ *:-+: *$/, tableAlignLeft: /^ *:-+ *$/, startATag: /^<a /i, endATag: /^<\/a>/i, startPreScriptTag: /^<(pre|code|kbd|script)(\s|>)/i, endPreScriptTag: /^<\/(pre|code|kbd|script)(\s|>)/i, startAngleBracket: /^</, endAngleBracket: />$/, pedanticHrefTitle: /^([^'"]*[^\s])\s+(['"])(.*)\2/, unicodeAlphaNumeric: /[\p{L}\p{N}]/u, escapeTest: /[&<>"']/, escapeReplace: /[&<>"']/g, escapeTestNoEncode: /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/, escapeReplaceNoEncode: /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/g, caret: /(^|[^\[])\^/g, percentDecode: /%25/g, findPipe: /\|/g, splitPipe: / \|/, slashPipe: /\\\|/g, carriageReturn: /\r\n|\r/g, spaceLine: /^ +$/gm, notSpaceStart: /^\S*/, endingNewline: /\n$/, listItemRegex: (l3) => new RegExp(`^( {0,3}${l3})((?:[	 ][^\\n]*)?(?:\\n|$))`), nextBulletRegex: E((l3) => new RegExp(`^ {0,${l3}}(?:[*+-]|\\d{1,9}[.)])((?:[ 	][^\\n]*)?(?:\\n|$))`)), hrRegex: E((l3) => new RegExp(`^ {0,${l3}}((?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$)`)), fencesBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}(?:\`\`\`|~~~)`)), headingBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}#`)), htmlBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}<(?:[a-z].*>|!--)`, "i")), blockquoteBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}>`)) };
+var m = { codeRemoveIndent: /^(?: {1,4}| {0,3}\t)/gm, outputLinkReplace: /\\([\[\]])/g, indentCodeCompensation: /^(\s+)(?:```)/, beginningSpace: /^\s+/, endingHash: /#$/, startingSpaceChar: /^ /, endingSpaceChar: / $/, nonSpaceChar: /[^ ]/, newLineCharGlobal: /\n/g, tabCharGlobal: /\t/g, multipleSpaceGlobal: /\s+/g, blankLine: /^[ \t]*$/, doubleBlankLine: /\n[ \t]*\n[ \t]*$/, blockquoteStart: /^ {0,3}>/, blockquoteSetextReplace: /\n {0,3}((?:=+|-+) *)(?=\n|$)/g, blockquoteSetextReplace2: /^ {0,3}>[ \t]?/gm, listReplaceNesting: /^ {1,4}(?=( {4})*[^ ])/g, listIsTask: /^\[[ xX]\] +\S/, listReplaceTask: /^\[[ xX]\] +/, listTaskCheckbox: /\[[ xX]\]/, anyLine: /\n.*\n/, hrefBrackets: /^<(.*)>$/, tableDelimiter: /[:|]/, tableAlignChars: /^\||\| *$/g, tableRowBlankLine: /\n[ \t]*$/, tableAlignRight: /^ *-+: *$/, tableAlignCenter: /^ *:-+: *$/, tableAlignLeft: /^ *:-+ *$/, startATag: /^<a /i, endATag: /^<\/a>/i, startPreScriptTag: /^<(pre|code|kbd|script)(\s|>)/i, endPreScriptTag: /^<\/(pre|code|kbd|script)(\s|>)/i, startAngleBracket: /^</, endAngleBracket: />$/, pedanticHrefTitle: /^([^'"]*[^\s])\s+(['"])(.*)\2/, unicodeAlphaNumeric: /[\p{L}\p{N}]/u, escapeTest: /[&<>"']/, escapeReplace: /[&<>"']/g, escapeTestNoEncode: /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/, escapeReplaceNoEncode: /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/g, caret: /(^|[^\[])\^/g, percentDecode: /%25/g, findPipe: /\|/g, splitPipe: / \|/, slashPipe: /\\\|/g, carriageReturn: /\r\n|\r/g, spaceLine: /^ +$/gm, notSpaceStart: /^\S*/, endingNewline: /\n$/, listItemRegex: /* @__PURE__ */ __name((l3) => new RegExp(`^( {0,3}${l3})((?:[	 ][^\\n]*)?(?:\\n|$))`), "listItemRegex"), nextBulletRegex: E((l3) => new RegExp(`^ {0,${l3}}(?:[*+-]|\\d{1,9}[.)])((?:[ 	][^\\n]*)?(?:\\n|$))`)), hrRegex: E((l3) => new RegExp(`^ {0,${l3}}((?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$)`)), fencesBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}(?:\`\`\`|~~~)`)), headingBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}#`)), htmlBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}<(?:[a-z].*>|!--)`, "i")), blockquoteBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}>`)) };
 var Oe = /^(?:[ \t]*(?:\n|$))+/;
 var we = /^((?: {4}| {0,3}\t)[^\n]+(?:\n(?:[ \t]*(?:\n|$))*)?)+/;
 var ye = /^ {0,3}(`{3,}(?=[^`\n]*(?:\n|$))|~{3,})([^\n]*)(?:\n|$)(?:|([\s\S]*?)(?:\n|$))(?: {0,3}\1[~`]* *(?=\n|$)|$)/;
@@ -119,13 +128,14 @@ var nt = { ...Q, br: d(ue).replace("{2,}", "*").getRegex(), text: d(Q.text).repl
 var D = { normal: W, gfm: Ee, pedantic: Ie };
 var A = { normal: J, gfm: Q, breaks: nt, pedantic: tt };
 var rt = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
-var ge = (l3) => rt[l3];
+var ge = /* @__PURE__ */ __name((l3) => rt[l3], "ge");
 function O(l3, e) {
   if (e) {
     if (m.escapeTest.test(l3)) return l3.replace(m.escapeReplace, ge);
   } else if (m.escapeTestNoEncode.test(l3)) return l3.replace(m.escapeReplaceNoEncode, ge);
   return l3;
 }
+__name(O, "O");
 function V(l3) {
   try {
     l3 = encodeURI(l3).replace(m.percentDecode, "%");
@@ -134,6 +144,7 @@ function V(l3) {
   }
   return l3;
 }
+__name(V, "V");
 function Y(l3, e) {
   let t = l3.replace(m.findPipe, (r, i, o) => {
     let u = false, a = i;
@@ -145,6 +156,7 @@ function Y(l3, e) {
   for (; s < n.length; s++) n[s] = n[s].trim().replace(m.slashPipe, "|");
   return n;
 }
+__name(Y, "Y");
 function $(l3, e, t) {
   let n = l3.length;
   if (n === 0) return "";
@@ -157,6 +169,7 @@ function $(l3, e, t) {
   }
   return l3.slice(0, n - s);
 }
+__name($, "$");
 function ee(l3) {
   let e = l3.split(`
 `), t = e.length - 1;
@@ -164,6 +177,7 @@ function ee(l3) {
   return e.length - t <= 2 ? l3 : e.slice(0, t + 1).join(`
 `);
 }
+__name(ee, "ee");
 function fe(l3, e) {
   if (l3.indexOf(e[1]) === -1) return -1;
   let t = 0;
@@ -172,6 +186,7 @@ function fe(l3, e) {
   else if (l3[n] === e[1] && (t--, t < 0)) return n;
   return t > 0 ? -2 : -1;
 }
+__name(fe, "fe");
 function me(l3, e = 0) {
   let t = e, n = "";
   for (let s of l3) if (s === "	") {
@@ -180,12 +195,14 @@ function me(l3, e = 0) {
   } else n += s, t++;
   return n;
 }
+__name(me, "me");
 function xe(l3, e, t, n, s) {
   let r = e.href, i = e.title || null, o = l3[1].replace(s.other.outputLinkReplace, "$1");
   n.state.inLink = true;
   let u = { type: l3[0].charAt(0) === "!" ? "image" : "link", raw: t, href: r, title: i, text: o, tokens: n.inlineTokens(o) };
   return n.state.inLink = false, u;
 }
+__name(xe, "xe");
 function st(l3, e, t) {
   let n = l3.match(t.other.indentCodeCompensation);
   if (n === null) return e;
@@ -199,7 +216,11 @@ function st(l3, e, t) {
   }).join(`
 `);
 }
+__name(st, "st");
 var w = class {
+  static {
+    __name(this, "w");
+  }
   options;
   rules;
   lexer;
@@ -522,6 +543,9 @@ ${p}` : p;
   }
 };
 var x = class l {
+  static {
+    __name(this, "l");
+  }
   tokens;
   options;
   state;
@@ -742,6 +766,9 @@ var x = class l {
   }
 };
 var y = class {
+  static {
+    __name(this, "y");
+  }
   options;
   parser;
   constructor(e) {
@@ -860,6 +887,9 @@ ${e}</tr>
   }
 };
 var L = class {
+  static {
+    __name(this, "L");
+  }
   strong({ text: e }) {
     return e;
   }
@@ -892,6 +922,9 @@ var L = class {
   }
 };
 var b = class l2 {
+  static {
+    __name(this, "l2");
+  }
   options;
   renderer;
   textRenderer;
@@ -1044,6 +1077,9 @@ var b = class l2 {
   }
 };
 var P = class {
+  static {
+    __name(this, "P");
+  }
   options;
   block;
   constructor(e) {
@@ -1071,6 +1107,9 @@ var P = class {
   }
 };
 var q = class {
+  static {
+    __name(this, "q");
+  }
   defaults = M();
   options = this.setOptions;
   parse = this.parseMarkdown(true);
@@ -1235,6 +1274,7 @@ var z = new q();
 function g(l3, e) {
   return z.parse(l3, e);
 }
+__name(g, "g");
 g.options = g.setOptions = function(l3) {
   return z.setOptions(l3), g.defaults = z.defaults, N(g.defaults), g;
 };
@@ -1263,8 +1303,6 @@ var Wt = g.walkTokens;
 var Xt = g.parseInline;
 var Vt = b.parse;
 var Yt = x.lex;
-
-// pet_frontend.js
 function getPetHTML() {
   return `
     <div id="pixel-pet-container" class="pixel-pet-container">
@@ -1289,6 +1327,7 @@ function getPetHTML() {
     </div>
   `;
 }
+__name(getPetHTML, "getPetHTML");
 function getPetCSS() {
   return `
     .pixel-pet-container { border: 2px solid var(--text); background: var(--bg2); width: 100%; max-width: 320px; box-shadow: 4px 4px 0 rgba(0,0,0,0.8); display: flex; flex-direction: column; margin: 0 auto 20px auto; }
@@ -1321,6 +1360,7 @@ function getPetCSS() {
     .anim-shake { animation: pet-shake 0.15s ease 3; }
   `;
 }
+__name(getPetCSS, "getPetCSS");
 function getPetJS() {
   return `
     let isInteracting = false;
@@ -1420,8 +1460,7 @@ function getPetJS() {
     setInterval(randomExpression, 1500);
   `;
 }
-
-// frontend.js
+__name(getPetJS, "getPetJS");
 async function serveHomepage(request, env) {
   const url = new URL(request.url);
   const section = url.searchParams.get("section") || "home";
@@ -1867,8 +1906,7 @@ async function serveHomepage(request, env) {
     headers: { "Content-Type": "text/html;charset=UTF-8", "Cache-Control": "no-cache, no-store, must-revalidate" }
   });
 }
-
-// admin.js
+__name(serveHomepage, "serveHomepage");
 async function serveAdminPanel(request, env) {
   const isAuth = isAuthenticated(request);
   const url = new URL(request.url);
@@ -2736,8 +2774,7 @@ async function serveAdminPanel(request, env) {
     headers: { "Content-Type": "text/html;charset=UTF-8", "Cache-Control": "no-cache, no-store, must-revalidate" }
   });
 }
-
-// pet_backend.js
+__name(serveAdminPanel, "serveAdminPanel");
 async function handlePetRequest(url, request, env) {
   if (request.method === "GET") {
     try {
@@ -2772,8 +2809,7 @@ async function handlePetRequest(url, request, env) {
   }
   return new Response("Method not allowed", { status: 405 });
 }
-
-// worker.js
+__name(handlePetRequest, "handlePetRequest");
 var worker_default = {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -3048,6 +3084,8 @@ async function handleApi(request, env, pathname) {
   }
   return new Response("API endpoint not found", { status: 404 });
 }
+__name(handleApi, "handleApi");
 export {
   worker_default as default
 };
+//# sourceMappingURL=worker.js.map

@@ -1,6 +1,7 @@
 import { serveHomepage } from './frontend.js';
 import { serveAdminPanel } from './admin.js';
 import { isAuthenticated, setCookie } from './utils.js';
+import { handlePetRequest } from './pet_backend.js';
 
 export default {
   async fetch(request, env, ctx) {
@@ -47,6 +48,11 @@ export default {
 
 async function handleApi(request, env, pathname) {
   const method = request.method;
+
+  // Pet API
+  if (pathname.startsWith('/api/pet')) {
+    return handlePetRequest(new URL(request.url), request, env);
+  }
 
   // GET /api/guestbook
   if (pathname === '/api/guestbook' && method === 'GET') {

@@ -25,6 +25,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "----------------------------------------"
-echo "✅ 部署成功！"
+echo "✅ 部署成功！将在 5 秒后自动关闭终端窗口，按回车键立即退出..."
 echo ""
-read -p "按回车键退出..."
+read -t 5
+osascript -e 'tell application "Terminal" to close front window' &> /dev/null || exit 0

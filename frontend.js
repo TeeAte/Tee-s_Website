@@ -1,5 +1,6 @@
 import { escapeHtml } from "./utils.js";
 import { marked } from "marked";
+import { getPetHTML, getPetCSS, getPetJS } from "./pet_frontend.js";
 
 export 
 async function serveHomepage(request, env) {
@@ -41,7 +42,7 @@ async function serveHomepage(request, env) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(windowTitle)}</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23111111'/><text x='50' y='50' dy='.35em' font-family='Courier New' font-weight='900' font-size='70' text-anchor='middle' fill='%23E0E0E0'>T</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='2' y='2' width='28' height='22' rx='2' ry='2' fill='%23DDDDDD' stroke='%23000' stroke-width='2'/><rect x='4' y='4' width='24' height='15' fill='%23FFFFFF' stroke='%23000' stroke-width='2'/><rect x='8' y='7' width='3' height='3' fill='%23000'/><rect x='21' y='7' width='3' height='3' fill='%23000'/><path d='M 10 13 Q 16 17 22 13' fill='none' stroke='%23000' stroke-width='2'/><rect x='8' y='21' width='6' height='1' fill='%23000'/><rect x='10' y='24' width='12' height='6' fill='%23DDDDDD' stroke='%23000' stroke-width='2'/></svg>">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; overflow: hidden; }
@@ -142,8 +143,7 @@ async function serveHomepage(request, env) {
     .site-header { margin-bottom: 20px; text-align: center; border-bottom: 2px solid var(--border2); padding-bottom: 20px; }
     .site-title { font-size: 2rem; font-weight: 900; color: var(--text); letter-spacing: 2px; }
     .site-subtitle { font-size: 1.2rem; color: var(--text3); margin-top: 5px; }
-
-    .music-box { width: 100%; border-radius: 0; border: 1px solid #000; box-shadow: 2px 2px 0 #000; margin-bottom: 20px; }
+    .music-box { width: 100%; max-width: 100%; height: 67px; border-radius: 0; border: 1px solid #000; box-shadow: 2px 2px 0 #000; margin-bottom: 20px; display: block; overflow: hidden; background: #fff; }
     
     .post-card { background: var(--bg); border: 1px solid var(--border2); padding: 20px; margin-bottom: 20px; box-shadow: inset 1px 1px 0 var(--border2), inset -1px -1px 0 #000; }
     .post-title { font-size: 1.5rem; color: var(--text2); margin-bottom: 10px; font-weight: bold; }
@@ -208,6 +208,7 @@ async function serveHomepage(request, env) {
     /* Scrollbar */
     ::-webkit-scrollbar { width: 16px; background: var(--bg2); border-left: 1px solid #000; }
     ::-webkit-scrollbar-thumb { background: var(--border2); border: 1px solid #000; }
+    ${getPetCSS()}
   </style>
 </head>
 <body>
@@ -243,6 +244,7 @@ async function serveHomepage(request, env) {
             <div class="site-subtitle">${escapeHtml(siteSubtitle)}</div>
           </div>
           ${musicPlayerCode}
+          ${getPetHTML()}
           <div class="posts-section">
             ${posts.slice(0, 3).map(post => `
               <div class="post-card">
@@ -442,6 +444,7 @@ async function serveHomepage(request, env) {
       document.addEventListener('touchstart', dragStart, {passive: false});
       document.addEventListener('touchmove', dragMove, {passive: false});
       document.addEventListener('touchend', dragEnd);
+    ${getPetJS()}
   </script>
 
 </body>
