@@ -1,8 +1,12 @@
-// core/utils.js
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+
+// dist/worker.js
 function escapeHtml(text) {
   if (!text) return "";
   return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
+__name(escapeHtml, "escapeHtml");
 function getCookie(request, name) {
   const cookieString = request.headers.get("Cookie");
   if (!cookieString) return null;
@@ -15,34 +19,28 @@ function getCookie(request, name) {
   }
   return null;
 }
+__name(getCookie, "getCookie");
 function setCookie(response, name, value, days = 7) {
   const expires = new Date(Date.now() + days * 864e5).toUTCString();
   const cookieString = `${name}=${value}; expires=${expires}; path=/; HttpOnly; SameSite=Lax`;
   response.headers.append("Set-Cookie", cookieString);
 }
+__name(setCookie, "setCookie");
 function isAuthenticated(request) {
   const token = getCookie(request, "admin_token");
   return token === "secret-admin-token";
 }
-function jsonResponse(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { "Content-Type": "application/json" }
-  });
-}
-function errorResponse(message, status = 500) {
-  return jsonResponse({ error: message, success: false }, status);
-}
-
-// node_modules/marked/lib/marked.esm.js
+__name(isAuthenticated, "isAuthenticated");
 function M() {
   return { async: false, breaks: false, extensions: null, gfm: true, hooks: null, pedantic: false, renderer: null, silent: false, tokenizer: null, walkTokens: null };
 }
+__name(M, "M");
 var T = M();
 function N(l3) {
   T = l3;
 }
-var _ = { exec: () => null };
+__name(N, "N");
+var _ = { exec: /* @__PURE__ */ __name(() => null, "exec") };
 function E(l3) {
   let e = [];
   return (t) => {
@@ -50,13 +48,15 @@ function E(l3) {
     return s || (s = l3(n), e[n] = s), s;
   };
 }
+__name(E, "E");
 function d(l3, e = "") {
-  let t = typeof l3 == "string" ? l3 : l3.source, n = { replace: (s, r) => {
+  let t = typeof l3 == "string" ? l3 : l3.source, n = { replace: /* @__PURE__ */ __name((s, r) => {
     let i = typeof r == "string" ? r : r.source;
     return i = i.replace(m.caret, "$1"), t = t.replace(s, i), n;
-  }, getRegex: () => new RegExp(t, e) };
+  }, "replace"), getRegex: /* @__PURE__ */ __name(() => new RegExp(t, e), "getRegex") };
   return n;
 }
+__name(d, "d");
 var Te = ((l3 = "") => {
   try {
     return !!new RegExp("(?<=1)(?<!1)" + l3);
@@ -64,7 +64,7 @@ var Te = ((l3 = "") => {
     return false;
   }
 })();
-var m = { codeRemoveIndent: /^(?: {1,4}| {0,3}\t)/gm, outputLinkReplace: /\\([\[\]])/g, indentCodeCompensation: /^(\s+)(?:```)/, beginningSpace: /^\s+/, endingHash: /#$/, startingSpaceChar: /^ /, endingSpaceChar: / $/, nonSpaceChar: /[^ ]/, newLineCharGlobal: /\n/g, tabCharGlobal: /\t/g, multipleSpaceGlobal: /\s+/g, blankLine: /^[ \t]*$/, doubleBlankLine: /\n[ \t]*\n[ \t]*$/, blockquoteStart: /^ {0,3}>/, blockquoteSetextReplace: /\n {0,3}((?:=+|-+) *)(?=\n|$)/g, blockquoteSetextReplace2: /^ {0,3}>[ \t]?/gm, listReplaceNesting: /^ {1,4}(?=( {4})*[^ ])/g, listIsTask: /^\[[ xX]\] +\S/, listReplaceTask: /^\[[ xX]\] +/, listTaskCheckbox: /\[[ xX]\]/, anyLine: /\n.*\n/, hrefBrackets: /^<(.*)>$/, tableDelimiter: /[:|]/, tableAlignChars: /^\||\| *$/g, tableRowBlankLine: /\n[ \t]*$/, tableAlignRight: /^ *-+: *$/, tableAlignCenter: /^ *:-+: *$/, tableAlignLeft: /^ *:-+ *$/, startATag: /^<a /i, endATag: /^<\/a>/i, startPreScriptTag: /^<(pre|code|kbd|script)(\s|>)/i, endPreScriptTag: /^<\/(pre|code|kbd|script)(\s|>)/i, startAngleBracket: /^</, endAngleBracket: />$/, pedanticHrefTitle: /^([^'"]*[^\s])\s+(['"])(.*)\2/, unicodeAlphaNumeric: /[\p{L}\p{N}]/u, escapeTest: /[&<>"']/, escapeReplace: /[&<>"']/g, escapeTestNoEncode: /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/, escapeReplaceNoEncode: /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/g, caret: /(^|[^\[])\^/g, percentDecode: /%25/g, findPipe: /\|/g, splitPipe: / \|/, slashPipe: /\\\|/g, carriageReturn: /\r\n|\r/g, spaceLine: /^ +$/gm, notSpaceStart: /^\S*/, endingNewline: /\n$/, listItemRegex: (l3) => new RegExp(`^( {0,3}${l3})((?:[	 ][^\\n]*)?(?:\\n|$))`), nextBulletRegex: E((l3) => new RegExp(`^ {0,${l3}}(?:[*+-]|\\d{1,9}[.)])((?:[ 	][^\\n]*)?(?:\\n|$))`)), hrRegex: E((l3) => new RegExp(`^ {0,${l3}}((?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$)`)), fencesBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}(?:\`\`\`|~~~)`)), headingBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}#`)), htmlBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}<(?:[a-z].*>|!--)`, "i")), blockquoteBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}>`)) };
+var m = { codeRemoveIndent: /^(?: {1,4}| {0,3}\t)/gm, outputLinkReplace: /\\([\[\]])/g, indentCodeCompensation: /^(\s+)(?:```)/, beginningSpace: /^\s+/, endingHash: /#$/, startingSpaceChar: /^ /, endingSpaceChar: / $/, nonSpaceChar: /[^ ]/, newLineCharGlobal: /\n/g, tabCharGlobal: /\t/g, multipleSpaceGlobal: /\s+/g, blankLine: /^[ \t]*$/, doubleBlankLine: /\n[ \t]*\n[ \t]*$/, blockquoteStart: /^ {0,3}>/, blockquoteSetextReplace: /\n {0,3}((?:=+|-+) *)(?=\n|$)/g, blockquoteSetextReplace2: /^ {0,3}>[ \t]?/gm, listReplaceNesting: /^ {1,4}(?=( {4})*[^ ])/g, listIsTask: /^\[[ xX]\] +\S/, listReplaceTask: /^\[[ xX]\] +/, listTaskCheckbox: /\[[ xX]\]/, anyLine: /\n.*\n/, hrefBrackets: /^<(.*)>$/, tableDelimiter: /[:|]/, tableAlignChars: /^\||\| *$/g, tableRowBlankLine: /\n[ \t]*$/, tableAlignRight: /^ *-+: *$/, tableAlignCenter: /^ *:-+: *$/, tableAlignLeft: /^ *:-+ *$/, startATag: /^<a /i, endATag: /^<\/a>/i, startPreScriptTag: /^<(pre|code|kbd|script)(\s|>)/i, endPreScriptTag: /^<\/(pre|code|kbd|script)(\s|>)/i, startAngleBracket: /^</, endAngleBracket: />$/, pedanticHrefTitle: /^([^'"]*[^\s])\s+(['"])(.*)\2/, unicodeAlphaNumeric: /[\p{L}\p{N}]/u, escapeTest: /[&<>"']/, escapeReplace: /[&<>"']/g, escapeTestNoEncode: /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/, escapeReplaceNoEncode: /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/g, caret: /(^|[^\[])\^/g, percentDecode: /%25/g, findPipe: /\|/g, splitPipe: / \|/, slashPipe: /\\\|/g, carriageReturn: /\r\n|\r/g, spaceLine: /^ +$/gm, notSpaceStart: /^\S*/, endingNewline: /\n$/, listItemRegex: /* @__PURE__ */ __name((l3) => new RegExp(`^( {0,3}${l3})((?:[	 ][^\\n]*)?(?:\\n|$))`), "listItemRegex"), nextBulletRegex: E((l3) => new RegExp(`^ {0,${l3}}(?:[*+-]|\\d{1,9}[.)])((?:[ 	][^\\n]*)?(?:\\n|$))`)), hrRegex: E((l3) => new RegExp(`^ {0,${l3}}((?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$)`)), fencesBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}(?:\`\`\`|~~~)`)), headingBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}#`)), htmlBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}<(?:[a-z].*>|!--)`, "i")), blockquoteBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}>`)) };
 var Oe = /^(?:[ \t]*(?:\n|$))+/;
 var we = /^((?: {4}| {0,3}\t)[^\n]+(?:\n(?:[ \t]*(?:\n|$))*)?)+/;
 var ye = /^ {0,3}(`{3,}(?=[^`\n]*(?:\n|$))|~{3,})([^\n]*)(?:\n|$)(?:|([\s\S]*?)(?:\n|$))(?: {0,3}\1[~`]* *(?=\n|$)|$)/;
@@ -128,13 +128,14 @@ var nt = { ...Q, br: d(ue).replace("{2,}", "*").getRegex(), text: d(Q.text).repl
 var D = { normal: W, gfm: Ee, pedantic: Ie };
 var A = { normal: J, gfm: Q, breaks: nt, pedantic: tt };
 var rt = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
-var ge = (l3) => rt[l3];
+var ge = /* @__PURE__ */ __name((l3) => rt[l3], "ge");
 function O(l3, e) {
   if (e) {
     if (m.escapeTest.test(l3)) return l3.replace(m.escapeReplace, ge);
   } else if (m.escapeTestNoEncode.test(l3)) return l3.replace(m.escapeReplaceNoEncode, ge);
   return l3;
 }
+__name(O, "O");
 function V(l3) {
   try {
     l3 = encodeURI(l3).replace(m.percentDecode, "%");
@@ -143,6 +144,7 @@ function V(l3) {
   }
   return l3;
 }
+__name(V, "V");
 function Y(l3, e) {
   let t = l3.replace(m.findPipe, (r, i, o) => {
     let u = false, a = i;
@@ -154,6 +156,7 @@ function Y(l3, e) {
   for (; s < n.length; s++) n[s] = n[s].trim().replace(m.slashPipe, "|");
   return n;
 }
+__name(Y, "Y");
 function $(l3, e, t) {
   let n = l3.length;
   if (n === 0) return "";
@@ -166,6 +169,7 @@ function $(l3, e, t) {
   }
   return l3.slice(0, n - s);
 }
+__name($, "$");
 function ee(l3) {
   let e = l3.split(`
 `), t = e.length - 1;
@@ -173,6 +177,7 @@ function ee(l3) {
   return e.length - t <= 2 ? l3 : e.slice(0, t + 1).join(`
 `);
 }
+__name(ee, "ee");
 function fe(l3, e) {
   if (l3.indexOf(e[1]) === -1) return -1;
   let t = 0;
@@ -181,6 +186,7 @@ function fe(l3, e) {
   else if (l3[n] === e[1] && (t--, t < 0)) return n;
   return t > 0 ? -2 : -1;
 }
+__name(fe, "fe");
 function me(l3, e = 0) {
   let t = e, n = "";
   for (let s of l3) if (s === "	") {
@@ -189,12 +195,14 @@ function me(l3, e = 0) {
   } else n += s, t++;
   return n;
 }
+__name(me, "me");
 function xe(l3, e, t, n, s) {
   let r = e.href, i = e.title || null, o = l3[1].replace(s.other.outputLinkReplace, "$1");
   n.state.inLink = true;
   let u = { type: l3[0].charAt(0) === "!" ? "image" : "link", raw: t, href: r, title: i, text: o, tokens: n.inlineTokens(o) };
   return n.state.inLink = false, u;
 }
+__name(xe, "xe");
 function st(l3, e, t) {
   let n = l3.match(t.other.indentCodeCompensation);
   if (n === null) return e;
@@ -208,7 +216,11 @@ function st(l3, e, t) {
   }).join(`
 `);
 }
+__name(st, "st");
 var w = class {
+  static {
+    __name(this, "w");
+  }
   options;
   rules;
   lexer;
@@ -531,6 +543,9 @@ ${p}` : p;
   }
 };
 var x = class l {
+  static {
+    __name(this, "l");
+  }
   tokens;
   options;
   state;
@@ -751,6 +766,9 @@ var x = class l {
   }
 };
 var y = class {
+  static {
+    __name(this, "y");
+  }
   options;
   parser;
   constructor(e) {
@@ -869,6 +887,9 @@ ${e}</tr>
   }
 };
 var L = class {
+  static {
+    __name(this, "L");
+  }
   strong({ text: e }) {
     return e;
   }
@@ -901,6 +922,9 @@ var L = class {
   }
 };
 var b = class l2 {
+  static {
+    __name(this, "l2");
+  }
   options;
   renderer;
   textRenderer;
@@ -1053,6 +1077,9 @@ var b = class l2 {
   }
 };
 var P = class {
+  static {
+    __name(this, "P");
+  }
   options;
   block;
   constructor(e) {
@@ -1080,6 +1107,9 @@ var P = class {
   }
 };
 var q = class {
+  static {
+    __name(this, "q");
+  }
   defaults = M();
   options = this.setOptions;
   parse = this.parseMarkdown(true);
@@ -1244,6 +1274,7 @@ var z = new q();
 function g(l3, e) {
   return z.parse(l3, e);
 }
+__name(g, "g");
 g.options = g.setOptions = function(l3) {
   return z.setOptions(l3), g.defaults = z.defaults, N(g.defaults), g;
 };
@@ -1272,8 +1303,6 @@ var Wt = g.walkTokens;
 var Xt = g.parseInline;
 var Vt = b.parse;
 var Yt = x.lex;
-
-// core/pet_frontend.js
 function getPetHTML() {
   return `
     <div id="pixel-pet-container" class="pixel-pet-container">
@@ -1298,6 +1327,7 @@ function getPetHTML() {
     </div>
   `;
 }
+__name(getPetHTML, "getPetHTML");
 function getPetCSS() {
   return `
     .pixel-pet-container { border: 2px solid var(--text); background: var(--bg2); width: 100%; max-width: 320px; box-shadow: 4px 4px 0 rgba(0,0,0,0.8); display: flex; flex-direction: column; margin: 0 auto 20px auto; }
@@ -1330,6 +1360,7 @@ function getPetCSS() {
     .anim-shake { animation: pet-shake 0.15s ease 3; }
   `;
 }
+__name(getPetCSS, "getPetCSS");
 function getPetJS() {
   return `
     let isInteracting = false;
@@ -1429,8 +1460,7 @@ function getPetJS() {
     setInterval(randomExpression, 1500);
   `;
 }
-
-// core/frontend.js
+__name(getPetJS, "getPetJS");
 async function serveHomepage(request, env) {
   const url = new URL(request.url);
   const section = url.searchParams.get("section") || "home";
@@ -1478,6 +1508,7 @@ async function serveHomepage(request, env) {
       ${urls.map((u) => `<img src="${u}" class="post-image grid-img" onclick="openLightbox('${u}')">`).join("")}
     </div>`;
   }
+  __name(renderPostImages, "renderPostImages");
   let galleryItems = [];
   posts.forEach((p) => {
     if (!p.image_url) return;
@@ -1604,7 +1635,7 @@ async function serveHomepage(request, env) {
     .post-title { font-size: 1.5rem; color: var(--text2); margin-bottom: 10px; font-weight: bold; }
     .post-date { font-size: 0.9rem; color: var(--text3); margin-bottom: 15px; }
     .post-content { line-height: 1.6; white-space: normal; font-family: "Courier New", monospace; }
-    .post-image { max-width: 100%; max-height: 400px; object-fit: contain; border: 1px solid #000; margin-top: 15px; display: block; box-shadow: 2px 2px 0 #000; }
+    .post-image { max-width: 100%; max-height: 400px; object-fit: contain; border: 1px solid #000; border-radius: 8px; margin-top: 15px; display: block; }
 
     /* Markdown Styles */
     .markdown-body { font-family: "Courier New", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", monospace; line-height: 1.6; }
@@ -1917,23 +1948,9 @@ async function serveHomepage(request, env) {
   <\/script>
 
 
-  <div id="lightboxModal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center; padding: 16px;" onclick="closeLightbox()">
-    <div class="window" style="width: fit-content; max-width: 90vw; min-width: 300px; max-height: 90vh; display: flex; flex-direction: column;" onclick="event.stopPropagation()">
-      <div class="topbar">
-        <div class="close-box" onclick="closeLightbox()"></div>
-        <h1>\u67E5\u770B\u56FE\u7247</h1>
-        <div class="shade-box"></div>
-        <div class="zoom-box"></div>
-      </div>
-      <div style="flex: 1; overflow-y: auto; background: var(--bg2); padding: 15px; border-top: 1px solid var(--bg3); display: flex; flex-direction: column;">
-        <div style="background: var(--bg3); border: 1px solid #000000; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2); padding: 0; font-size: 14px; line-height: 1.6; max-height: 70vh; display: flex; justify-content: center; align-items: center; overflow: hidden; align-self: center;">
-          <img id="lightboxImg" src="" style="max-width: 100%; max-height: 70vh; object-fit: contain; display: block;">
-        </div>
-        <div style="text-align: right; margin-top: 15px;">
-          <button class="btn" onclick="closeLightbox()">\u786E\u5B9A</button>
-        </div>
-      </div>
-    </div>
+  <div id="lightboxModal" class="lightbox-modal" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">\xD7</button>
+    <img id="lightboxImg" class="lightbox-content" src="" onclick="event.stopPropagation()">
   </div>
   <script>
     function openLightbox(url) {
@@ -1950,8 +1967,7 @@ async function serveHomepage(request, env) {
     headers: { "Content-Type": "text/html;charset=UTF-8", "Cache-Control": "no-cache, no-store, must-revalidate" }
   });
 }
-
-// core/admin.js
+__name(serveHomepage, "serveHomepage");
 async function serveAdminPanel(request, env) {
   const isAuth = isAuthenticated(request);
   const url = new URL(request.url);
@@ -2296,23 +2312,6 @@ async function serveAdminPanel(request, env) {
     </div>
   </div>
 
-  <div id="imageDetailsModal" class="modal-overlay" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; padding: 16px;">
-    <div class="window" style="width: 100%; max-width: 600px; max-height: 90vh; display: flex; flex-direction: column;">
-      <div class="topbar">
-        <div class="close-box" onclick="closeImageDetails()"></div>
-        <h1>\u56FE\u7247\u8BE6\u60C5</h1>
-        <div class="shade-box"></div>
-        <div class="zoom-box"></div>
-      </div>
-      <div style="flex: 1; overflow-y: auto; background: #BBBBBB; padding: 15px; border-top: 1px solid #FFFFFF;">
-        <div id="imageDetailsContent" style="background: #FFFFFF; border: 1px solid #000000; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2); padding: 12px; font-size: 14px; line-height: 1.6; max-height: 60vh; overflow-y: auto; display: flex; flex-direction: column; align-items: center;"></div>
-        <div style="text-align: right; margin-top: 15px;">
-          <button class="btn" onclick="closeImageDetails()">\u786E\u5B9A</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <script>
     let recentlyDeletedImages = new Set();
     function escapeHtml(text) {
@@ -2585,25 +2584,7 @@ async function serveAdminPanel(request, env) {
       document.getElementById('visitDetailsModal').style.display = 'none';
     }
 
-    function showImageDetails(name, url, used) {
-      const content = document.getElementById('imageDetailsContent');
-      content.innerHTML = \`
-        <div style="width: 100%; margin-bottom: 10px; background: #eee; border: 1px solid #000; display: flex; justify-content: center; padding: 10px; box-sizing: border-box;">
-          <img src="\${url}" style="max-width: 100%; max-height: 350px; object-fit: contain;">
-        </div>
-        <div style="width: 100%; text-align: left; word-break: break-all;">
-          <p style="margin-bottom: 5px;"><strong>\u6587\u4EF6\u540D\u79F0\uFF1A</strong> \${escapeHtml(name)}</p>
-          <p style="margin-bottom: 5px;"><strong>\u56FE\u7247\u8DEF\u5F84\uFF1A</strong> \${escapeHtml(url)}</p>
-          <p style="margin-bottom: 5px;"><strong>\u4F7F\u7528\u72B6\u6001\uFF1A</strong> \${used ? '\u2705 \u5DF2\u4F7F\u7528' : '\u26A0\uFE0F \u672A\u4F7F\u7528'}</p>
-        </div>
-      \`;
-      document.getElementById('imageDetailsModal').style.display = 'flex';
-    }
-
-    function closeImageDetails() {
-      document.getElementById('imageDetailsModal').style.display = 'none';
-    }
-
+    
     function renderImagePreviews() {
       const container = document.getElementById('imagePreviewContainer');
       const uploadText = document.getElementById('uploadPrompt');
@@ -2799,8 +2780,8 @@ async function serveAdminPanel(request, env) {
         }
         container.innerHTML = images.map(img => \`
           <div style="border: 1px solid #000; padding: 5px; width: 150px; background: #fff; text-align: center;">
-            <div style="height: 100px; display: flex; align-items: center; justify-content: center; background: #eee; margin-bottom: 5px; overflow: hidden; cursor: pointer; border: 1px solid transparent;" onmouseover="this.style.borderColor='#000'" onmouseout="this.style.borderColor='transparent'" onclick="showImageDetails('\${img.name}', '\${img.url}', \${img.used})">
-              <img src="\${img.url}" style="max-width: 100%; max-height: 100%; object-fit: contain;" title="\u70B9\u51FB\u67E5\u770B\u8BE6\u60C5">
+            <div style="height: 100px; display: flex; align-items: center; justify-content: center; background: #eee; margin-bottom: 5px; overflow: hidden;">
+              <img src="\${img.url}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
             </div>
             <div style="font-size: 11px; word-break: break-all; margin-bottom: 5px; height: 30px; overflow: hidden;">\${escapeHtml(img.name)}</div>
             <div style="margin-bottom: 5px; font-weight: bold; color: \${img.used ? '#00aa00' : '#aa0000'};">
@@ -2871,8 +2852,7 @@ async function serveAdminPanel(request, env) {
     headers: { "Content-Type": "text/html;charset=UTF-8", "Cache-Control": "no-cache, no-store, must-revalidate" }
   });
 }
-
-// core/pet_backend.js
+__name(serveAdminPanel, "serveAdminPanel");
 async function handlePetRequest(url, request, env) {
   if (request.method === "GET") {
     try {
@@ -2881,9 +2861,11 @@ async function handlePetRequest(url, request, env) {
       if (!pet) {
         pet = { name: "Cloud Cat", exp: 0, level: 1 };
       }
-      return jsonResponse(pet);
+      return new Response(JSON.stringify(pet), {
+        headers: { "Content-Type": "application/json" }
+      });
     } catch (e) {
-      return errorResponse(e.message);
+      return new Response(JSON.stringify({ error: e.message }), { status: 500 });
     }
   }
   if (request.method === "POST") {
@@ -2896,15 +2878,16 @@ async function handlePetRequest(url, request, env) {
       currentExp += expGain;
       const level = Math.floor(currentExp / 100) + 1;
       await env.DB.prepare("UPDATE pet_state SET exp = ?, level = ? WHERE id = 1").bind(currentExp, level).run();
-      return jsonResponse({ success: true, exp: currentExp, level });
+      return new Response(JSON.stringify({ success: true, exp: currentExp, level }), {
+        headers: { "Content-Type": "application/json" }
+      });
     } catch (e) {
-      return errorResponse(e.message);
+      return new Response(JSON.stringify({ error: e.message }), { status: 500 });
     }
   }
   return new Response("Method not allowed", { status: 405 });
 }
-
-// core/worker.js
+__name(handlePetRequest, "handlePetRequest");
 var worker_default = {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -2929,7 +2912,7 @@ var worker_default = {
           ).bind("error", String(error.stack || error.message).substring(0, 500), "api").run().catch(() => {
           })
         );
-        return errorResponse("Internal Server Error", 500);
+        return new Response(JSON.stringify({ success: false, error: "Internal Server Error" }), { status: 500 });
       }
     }
     if (pathname === "/admin") {
@@ -3143,20 +3126,7 @@ async function handleApi(request, env, pathname) {
     const kvList = await env.IMAGE_KV.list();
     const postsWithImages = await env.DB.prepare("SELECT image_url FROM posts WHERE image_url IS NOT NULL").all();
     const aboutImageSetting = await env.DB.prepare("SELECT value FROM settings WHERE key = ?").bind("about_image_url").first();
-    const usedUrls = /* @__PURE__ */ new Set();
-    postsWithImages.results.forEach((r) => {
-      const urlStr = r.image_url;
-      if (!urlStr) return;
-      if (urlStr.startsWith("[")) {
-        try {
-          JSON.parse(urlStr).forEach((u) => usedUrls.add(u));
-        } catch (e) {
-          usedUrls.add(urlStr);
-        }
-      } else {
-        usedUrls.add(urlStr);
-      }
-    });
+    const usedUrls = new Set(postsWithImages.results.map((r) => r.image_url));
     if (aboutImageSetting && aboutImageSetting.value) {
       usedUrls.add(aboutImageSetting.value);
     }
@@ -3204,6 +3174,8 @@ async function handleApi(request, env, pathname) {
   }
   return new Response("API endpoint not found", { status: 404 });
 }
+__name(handleApi, "handleApi");
 export {
   worker_default as default
 };
+//# sourceMappingURL=worker.js.map
