@@ -1,31 +1,34 @@
-
 import { serveHomepage } from './frontend.js';
 import { serveAdminPanel } from './admin.js';
-import { isAuthenticated } from './utils.js';
+import { isAuthenticated, setCookie } from './utils.js';
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const pathname = url.pathname;
     
-    // Log visit
+    // Log visit asynchronously
     if (!pathname.startsWith('/api/') && pathname !== '/admin') {
       const ip = request.headers.get('cf-connecting-ip') || 'unknown';
       const userAgent = request.headers.get('user-agent') || 'unknown';
       const referer = request.headers.get('referer') || '';
       
-      env.DB.prepare(
-        'INSERT INTO visits (path, ip, user_agent, referer) VALUES (?, ?, ?, ?)'
-      ).bind(pathname, ip, userAgent, referer).run().catch(e => console.error("Log error", e));
+      ctx.waitUntil(
+        env.DB.prepare(
+          'INSERT INTO visits (path, ip, user_agent, referer) VALUES (?, ?, ?, ?)'
+        ).bind(pathname, ip, userAgent, referer).run().catch(e => console.error("Log error", e))
+      );
     }
 
     if (pathname.startsWith('/api/')) {
       try {
         return await handleApi(request, env, pathname);
       } catch (error) {
-        await env.DB.prepare(
-          'INSERT INTO logs (level, message, source) VALUES (?, ?, ?)'
-        ).bind('error', error.stack || error.message, 'api').run().catch(() => {});
+        ctx.waitUntil(
+          env.DB.prepare(
+            'INSERT INTO logs (level, message, source) VALUES (?, ?, ?)'
+          ).bind('error', String(error.stack || error.message).substring(0, 500), 'api').run().catch(() => {})
+        );
         return new Response(JSON.stringify({ success: false, error: 'Internal Server Error' }), { status: 500 });
       }
     }
@@ -45,11 +48,31 @@ export default {
 async function handleApi(request, env, pathname) {
   const method = request.method;
 
+  // GET /api/guestbook
+  if (pathname === '/api/guestbook' && method === 'GET') {
+    if (!isAuthenticated(request)) return new Response('Unauthorized', { status: 401 });
+    const result = await env.DB.prepare('SELECT * FROM guestbook ORDER BY created_at DESC').all();
+    return new Response(JSON.stringify(result.results || []), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   // POST /api/guestbook
   if (pathname === '/api/guestbook' && method === 'POST') {
-    const { author, message } = await request.json();
+    const { author, message, x, y, color } = await request.json();
     if (!author || !message) return new Response(JSON.stringify({ success: false, message: '昵称和留言不能为空' }), { status: 400 });
-    await env.DB.prepare('INSERT INTO guestbook (author, message) VALUES (?, ?)').bind(author, message).run();
+    const posX = x !== undefined ? parseInt(x) : -1;
+    const posY = y !== undefined ? parseInt(y) : -1;
+    const clr = color || 'yellow';
+    await env.DB.prepare('INSERT INTO guestbook (author, message, x, y, color) VALUES (?, ?, ?, ?, ?)').bind(author, message, posX, posY, clr).run();
+    return new Response(JSON.stringify({ success: true }));
+  }
+
+  // PATCH /api/guestbook/:id/position
+  if (pathname.match(/^\/api\/guestbook\/\d+\/position$/) && method === 'PATCH') {
+    const id = pathname.split('/')[3];
+    const { x, y } = await request.json();
+    await env.DB.prepare('UPDATE guestbook SET x = ?, y = ? WHERE id = ?').bind(parseInt(x), parseInt(y), id).run();
     return new Response(JSON.stringify({ success: true }));
   }
 

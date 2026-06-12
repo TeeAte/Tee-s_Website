@@ -15,8 +15,9 @@ fi
 # 2. 调用 Wrangler 进行部署
 echo "[2/2] 正在上传部署..."
 # 这里需要用 dist/worker.js，或者用入口 worker.js 让 wrangler 自己解析
-# 因为我们配置了 main = "worker.js"，所以直接执行 deploy 即可
-npx wrangler deploy
+# 我们在 wrangler.toml 中已经配置了 main = "dist/worker.js"
+# 加入 WRANGLER_SEND_METRICS=false 防止因为偶尔弹出统计确认窗口导致卡死
+WRANGLER_SEND_METRICS=false npx wrangler deploy
 if [ $? -ne 0 ]; then
     echo "❌ 部署失败！请检查网络或配置。"
     read -p "按回车键退出..."

@@ -1,8 +1,12 @@
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+
 // utils.js
 function escapeHtml(text) {
   if (!text) return "";
   return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
+__name(escapeHtml, "escapeHtml");
 function getCookie(request, name) {
   const cookieString = request.headers.get("Cookie");
   if (!cookieString) return null;
@@ -15,25 +19,30 @@ function getCookie(request, name) {
   }
   return null;
 }
+__name(getCookie, "getCookie");
 function setCookie(response, name, value, days = 7) {
   const expires = new Date(Date.now() + days * 864e5).toUTCString();
   const cookieString = `${name}=${value}; expires=${expires}; path=/; HttpOnly; SameSite=Lax`;
   response.headers.append("Set-Cookie", cookieString);
 }
+__name(setCookie, "setCookie");
 function isAuthenticated(request) {
   const token = getCookie(request, "admin_token");
   return token === "secret-admin-token";
 }
+__name(isAuthenticated, "isAuthenticated");
 
 // node_modules/marked/lib/marked.esm.js
 function M() {
   return { async: false, breaks: false, extensions: null, gfm: true, hooks: null, pedantic: false, renderer: null, silent: false, tokenizer: null, walkTokens: null };
 }
+__name(M, "M");
 var T = M();
 function N(l3) {
   T = l3;
 }
-var _ = { exec: () => null };
+__name(N, "N");
+var _ = { exec: /* @__PURE__ */ __name(() => null, "exec") };
 function E(l3) {
   let e = [];
   return (t) => {
@@ -41,13 +50,15 @@ function E(l3) {
     return s || (s = l3(n), e[n] = s), s;
   };
 }
+__name(E, "E");
 function d(l3, e = "") {
-  let t = typeof l3 == "string" ? l3 : l3.source, n = { replace: (s, r) => {
+  let t = typeof l3 == "string" ? l3 : l3.source, n = { replace: /* @__PURE__ */ __name((s, r) => {
     let i = typeof r == "string" ? r : r.source;
     return i = i.replace(m.caret, "$1"), t = t.replace(s, i), n;
-  }, getRegex: () => new RegExp(t, e) };
+  }, "replace"), getRegex: /* @__PURE__ */ __name(() => new RegExp(t, e), "getRegex") };
   return n;
 }
+__name(d, "d");
 var Te = ((l3 = "") => {
   try {
     return !!new RegExp("(?<=1)(?<!1)" + l3);
@@ -55,7 +66,7 @@ var Te = ((l3 = "") => {
     return false;
   }
 })();
-var m = { codeRemoveIndent: /^(?: {1,4}| {0,3}\t)/gm, outputLinkReplace: /\\([\[\]])/g, indentCodeCompensation: /^(\s+)(?:```)/, beginningSpace: /^\s+/, endingHash: /#$/, startingSpaceChar: /^ /, endingSpaceChar: / $/, nonSpaceChar: /[^ ]/, newLineCharGlobal: /\n/g, tabCharGlobal: /\t/g, multipleSpaceGlobal: /\s+/g, blankLine: /^[ \t]*$/, doubleBlankLine: /\n[ \t]*\n[ \t]*$/, blockquoteStart: /^ {0,3}>/, blockquoteSetextReplace: /\n {0,3}((?:=+|-+) *)(?=\n|$)/g, blockquoteSetextReplace2: /^ {0,3}>[ \t]?/gm, listReplaceNesting: /^ {1,4}(?=( {4})*[^ ])/g, listIsTask: /^\[[ xX]\] +\S/, listReplaceTask: /^\[[ xX]\] +/, listTaskCheckbox: /\[[ xX]\]/, anyLine: /\n.*\n/, hrefBrackets: /^<(.*)>$/, tableDelimiter: /[:|]/, tableAlignChars: /^\||\| *$/g, tableRowBlankLine: /\n[ \t]*$/, tableAlignRight: /^ *-+: *$/, tableAlignCenter: /^ *:-+: *$/, tableAlignLeft: /^ *:-+ *$/, startATag: /^<a /i, endATag: /^<\/a>/i, startPreScriptTag: /^<(pre|code|kbd|script)(\s|>)/i, endPreScriptTag: /^<\/(pre|code|kbd|script)(\s|>)/i, startAngleBracket: /^</, endAngleBracket: />$/, pedanticHrefTitle: /^([^'"]*[^\s])\s+(['"])(.*)\2/, unicodeAlphaNumeric: /[\p{L}\p{N}]/u, escapeTest: /[&<>"']/, escapeReplace: /[&<>"']/g, escapeTestNoEncode: /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/, escapeReplaceNoEncode: /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/g, caret: /(^|[^\[])\^/g, percentDecode: /%25/g, findPipe: /\|/g, splitPipe: / \|/, slashPipe: /\\\|/g, carriageReturn: /\r\n|\r/g, spaceLine: /^ +$/gm, notSpaceStart: /^\S*/, endingNewline: /\n$/, listItemRegex: (l3) => new RegExp(`^( {0,3}${l3})((?:[	 ][^\\n]*)?(?:\\n|$))`), nextBulletRegex: E((l3) => new RegExp(`^ {0,${l3}}(?:[*+-]|\\d{1,9}[.)])((?:[ 	][^\\n]*)?(?:\\n|$))`)), hrRegex: E((l3) => new RegExp(`^ {0,${l3}}((?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$)`)), fencesBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}(?:\`\`\`|~~~)`)), headingBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}#`)), htmlBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}<(?:[a-z].*>|!--)`, "i")), blockquoteBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}>`)) };
+var m = { codeRemoveIndent: /^(?: {1,4}| {0,3}\t)/gm, outputLinkReplace: /\\([\[\]])/g, indentCodeCompensation: /^(\s+)(?:```)/, beginningSpace: /^\s+/, endingHash: /#$/, startingSpaceChar: /^ /, endingSpaceChar: / $/, nonSpaceChar: /[^ ]/, newLineCharGlobal: /\n/g, tabCharGlobal: /\t/g, multipleSpaceGlobal: /\s+/g, blankLine: /^[ \t]*$/, doubleBlankLine: /\n[ \t]*\n[ \t]*$/, blockquoteStart: /^ {0,3}>/, blockquoteSetextReplace: /\n {0,3}((?:=+|-+) *)(?=\n|$)/g, blockquoteSetextReplace2: /^ {0,3}>[ \t]?/gm, listReplaceNesting: /^ {1,4}(?=( {4})*[^ ])/g, listIsTask: /^\[[ xX]\] +\S/, listReplaceTask: /^\[[ xX]\] +/, listTaskCheckbox: /\[[ xX]\]/, anyLine: /\n.*\n/, hrefBrackets: /^<(.*)>$/, tableDelimiter: /[:|]/, tableAlignChars: /^\||\| *$/g, tableRowBlankLine: /\n[ \t]*$/, tableAlignRight: /^ *-+: *$/, tableAlignCenter: /^ *:-+: *$/, tableAlignLeft: /^ *:-+ *$/, startATag: /^<a /i, endATag: /^<\/a>/i, startPreScriptTag: /^<(pre|code|kbd|script)(\s|>)/i, endPreScriptTag: /^<\/(pre|code|kbd|script)(\s|>)/i, startAngleBracket: /^</, endAngleBracket: />$/, pedanticHrefTitle: /^([^'"]*[^\s])\s+(['"])(.*)\2/, unicodeAlphaNumeric: /[\p{L}\p{N}]/u, escapeTest: /[&<>"']/, escapeReplace: /[&<>"']/g, escapeTestNoEncode: /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/, escapeReplaceNoEncode: /[<>"']|&(?!(#\d{1,7}|#[Xx][a-fA-F0-9]{1,6}|\w+);)/g, caret: /(^|[^\[])\^/g, percentDecode: /%25/g, findPipe: /\|/g, splitPipe: / \|/, slashPipe: /\\\|/g, carriageReturn: /\r\n|\r/g, spaceLine: /^ +$/gm, notSpaceStart: /^\S*/, endingNewline: /\n$/, listItemRegex: /* @__PURE__ */ __name((l3) => new RegExp(`^( {0,3}${l3})((?:[	 ][^\\n]*)?(?:\\n|$))`), "listItemRegex"), nextBulletRegex: E((l3) => new RegExp(`^ {0,${l3}}(?:[*+-]|\\d{1,9}[.)])((?:[ 	][^\\n]*)?(?:\\n|$))`)), hrRegex: E((l3) => new RegExp(`^ {0,${l3}}((?:- *){3,}|(?:_ *){3,}|(?:\\* *){3,})(?:\\n+|$)`)), fencesBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}(?:\`\`\`|~~~)`)), headingBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}#`)), htmlBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}<(?:[a-z].*>|!--)`, "i")), blockquoteBeginRegex: E((l3) => new RegExp(`^ {0,${l3}}>`)) };
 var Oe = /^(?:[ \t]*(?:\n|$))+/;
 var we = /^((?: {4}| {0,3}\t)[^\n]+(?:\n(?:[ \t]*(?:\n|$))*)?)+/;
 var ye = /^ {0,3}(`{3,}(?=[^`\n]*(?:\n|$))|~{3,})([^\n]*)(?:\n|$)(?:|([\s\S]*?)(?:\n|$))(?: {0,3}\1[~`]* *(?=\n|$)|$)/;
@@ -119,13 +130,14 @@ var nt = { ...Q, br: d(ue).replace("{2,}", "*").getRegex(), text: d(Q.text).repl
 var D = { normal: W, gfm: Ee, pedantic: Ie };
 var A = { normal: J, gfm: Q, breaks: nt, pedantic: tt };
 var rt = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
-var ge = (l3) => rt[l3];
+var ge = /* @__PURE__ */ __name((l3) => rt[l3], "ge");
 function O(l3, e) {
   if (e) {
     if (m.escapeTest.test(l3)) return l3.replace(m.escapeReplace, ge);
   } else if (m.escapeTestNoEncode.test(l3)) return l3.replace(m.escapeReplaceNoEncode, ge);
   return l3;
 }
+__name(O, "O");
 function V(l3) {
   try {
     l3 = encodeURI(l3).replace(m.percentDecode, "%");
@@ -134,6 +146,7 @@ function V(l3) {
   }
   return l3;
 }
+__name(V, "V");
 function Y(l3, e) {
   let t = l3.replace(m.findPipe, (r, i, o) => {
     let u = false, a = i;
@@ -145,6 +158,7 @@ function Y(l3, e) {
   for (; s < n.length; s++) n[s] = n[s].trim().replace(m.slashPipe, "|");
   return n;
 }
+__name(Y, "Y");
 function $(l3, e, t) {
   let n = l3.length;
   if (n === 0) return "";
@@ -157,6 +171,7 @@ function $(l3, e, t) {
   }
   return l3.slice(0, n - s);
 }
+__name($, "$");
 function ee(l3) {
   let e = l3.split(`
 `), t = e.length - 1;
@@ -164,6 +179,7 @@ function ee(l3) {
   return e.length - t <= 2 ? l3 : e.slice(0, t + 1).join(`
 `);
 }
+__name(ee, "ee");
 function fe(l3, e) {
   if (l3.indexOf(e[1]) === -1) return -1;
   let t = 0;
@@ -172,6 +188,7 @@ function fe(l3, e) {
   else if (l3[n] === e[1] && (t--, t < 0)) return n;
   return t > 0 ? -2 : -1;
 }
+__name(fe, "fe");
 function me(l3, e = 0) {
   let t = e, n = "";
   for (let s of l3) if (s === "	") {
@@ -180,12 +197,14 @@ function me(l3, e = 0) {
   } else n += s, t++;
   return n;
 }
+__name(me, "me");
 function xe(l3, e, t, n, s) {
   let r = e.href, i = e.title || null, o = l3[1].replace(s.other.outputLinkReplace, "$1");
   n.state.inLink = true;
   let u = { type: l3[0].charAt(0) === "!" ? "image" : "link", raw: t, href: r, title: i, text: o, tokens: n.inlineTokens(o) };
   return n.state.inLink = false, u;
 }
+__name(xe, "xe");
 function st(l3, e, t) {
   let n = l3.match(t.other.indentCodeCompensation);
   if (n === null) return e;
@@ -199,7 +218,11 @@ function st(l3, e, t) {
   }).join(`
 `);
 }
+__name(st, "st");
 var w = class {
+  static {
+    __name(this, "w");
+  }
   options;
   rules;
   lexer;
@@ -522,6 +545,9 @@ ${p}` : p;
   }
 };
 var x = class l {
+  static {
+    __name(this, "l");
+  }
   tokens;
   options;
   state;
@@ -742,6 +768,9 @@ var x = class l {
   }
 };
 var y = class {
+  static {
+    __name(this, "y");
+  }
   options;
   parser;
   constructor(e) {
@@ -860,6 +889,9 @@ ${e}</tr>
   }
 };
 var L = class {
+  static {
+    __name(this, "L");
+  }
   strong({ text: e }) {
     return e;
   }
@@ -892,6 +924,9 @@ var L = class {
   }
 };
 var b = class l2 {
+  static {
+    __name(this, "l");
+  }
   options;
   renderer;
   textRenderer;
@@ -1044,6 +1079,9 @@ var b = class l2 {
   }
 };
 var P = class {
+  static {
+    __name(this, "P");
+  }
   options;
   block;
   constructor(e) {
@@ -1071,6 +1109,9 @@ var P = class {
   }
 };
 var q = class {
+  static {
+    __name(this, "q");
+  }
   defaults = M();
   options = this.setOptions;
   parse = this.parseMarkdown(true);
@@ -1235,6 +1276,7 @@ var z = new q();
 function g(l3, e) {
   return z.parse(l3, e);
 }
+__name(g, "g");
 g.options = g.setOptions = function(l3) {
   return z.setOptions(l3), g.defaults = z.defaults, N(g.defaults), g;
 };
@@ -1329,7 +1371,7 @@ async function serveHomepage(request, env) {
     }
 
     body {
-      font-family: "Chicago", "Geneva", "Monaco", "Courier New", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      font-family: "Chicago", "Geneva", "Monaco", "Courier New", monospace;
       background: var(--bg);
       color: var(--text);
       height: 100vh;
@@ -1409,7 +1451,7 @@ async function serveHomepage(request, env) {
     .post-image { max-width: 100%; max-height: 400px; object-fit: contain; border: 1px solid #000; border-radius: 8px; margin-top: 15px; display: block; }
 
     /* Markdown Styles */
-    .markdown-body { font-family: "Courier New", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", monospace; line-height: 1.6; }
+    .markdown-body { font-family: "Courier New", monospace; line-height: 1.6; }
     .markdown-body p { margin-bottom: 10px; }
     .markdown-body h1, .markdown-body h2, .markdown-body h3 { color: var(--text2); margin-top: 15px; margin-bottom: 10px; border-bottom: 1px dashed var(--border2); padding-bottom: 5px;}
     .markdown-body a { color: var(--text2); text-decoration: underline; cursor: pointer; }
@@ -1421,8 +1463,8 @@ async function serveHomepage(request, env) {
     .markdown-body img { max-width: 100%; border: 1px solid #000; box-shadow: 2px 2px 0 #000; display: block; margin: 10px 0; }
 
     /* Guestbook Sticky Notes Wall */
-    .guestbook-wall { position: relative; width: 100%; height: 600px; background: var(--bg3); border: 2px inset var(--border2); overflow: auto; margin-top: 15px; background-image: radial-gradient(var(--border) 1px, transparent 1px); background-size: 20px 20px; touch-action: pan-x pan-y; }
-    .sticky-note { position: absolute; width: 160px; padding: 15px; box-shadow: 3px 3px 5px rgba(0,0,0,0.3); cursor: grab; user-select: none; font-family: 'Comic Sans MS', 'Chalkboard SE', 'Kaiti SC', 'KaiTi', 'STKaiti', cursive, sans-serif; font-size: 15px; transform-origin: top center; transition: box-shadow 0.2s; word-wrap: break-word; touch-action: none; }
+    .guestbook-wall { position: relative; width: 100%; height: 600px; background: var(--bg3); border: 2px inset var(--border2); overflow: hidden; margin-top: 15px; background-image: radial-gradient(var(--border) 1px, transparent 1px); background-size: 20px 20px; }
+    .sticky-note { position: absolute; width: 160px; padding: 15px; box-shadow: 3px 3px 5px rgba(0,0,0,0.3); cursor: grab; user-select: none; font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif; font-size: 14px; transform-origin: top center; transition: box-shadow 0.2s; word-wrap: break-word; }
     .sticky-note:active { cursor: grabbing; box-shadow: 6px 6px 10px rgba(0,0,0,0.4); z-index: 1000 !important; }
     .sticky-note::before { content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 60px; height: 20px; background: rgba(255, 255, 255, 0.4); box-shadow: 0 1px 2px rgba(0,0,0,0.2); border-radius: 2px; }
     .note-yellow { background-color: #fdfd96; color: #333; }
@@ -1431,12 +1473,6 @@ async function serveHomepage(request, env) {
     .note-green { background-color: #b5ead7; color: #333; }
     .note-author { font-weight: bold; margin-bottom: 8px; border-bottom: 1px dashed rgba(0,0,0,0.2); padding-bottom: 3px; font-size: 15px; }
     .note-date { font-size: 11px; color: rgba(0,0,0,0.5); text-align: right; margin-top: 10px; }
-    
-    @media(max-width:800px) {
-      .guestbook-wall { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px 0; height: auto; max-height: 80vh; }
-      .sticky-note { position: static !important; transform: none !important; margin: 0 auto; cursor: default; touch-action: auto; width: 80%; max-width: 300px; }
-      .sticky-note:active { cursor: default; box-shadow: 3px 3px 5px rgba(0,0,0,0.3) !important; z-index: auto !important; }
-    }
 
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
     .gallery-item { border: 1px solid var(--border2); background: var(--bg4); padding: 5px; cursor: pointer; transition: transform 0.2s; }
@@ -1451,8 +1487,6 @@ async function serveHomepage(request, env) {
     .sidebar-btn.active { background: var(--text); color: var(--bg); box-shadow: inset 2px 2px 0 var(--bg2); }
 
     /* Guestbook */
-    .input-field { padding: 4px 8px; border: 1px solid var(--border); background: var(--bg3); color: var(--text); font-family: inherit; font-size: 14px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.4); outline: none; transition: background 0.2s; }
-    .input-field:focus { background: var(--bg); border-color: var(--text2); }
     .guestbook-form { border: 2px solid var(--text); padding: 15px; margin-bottom: 20px; background: var(--bg2); }
     .gb-input, .gb-textarea { width: 100%; padding: 8px; border: 1px solid #000; background: var(--bg3); color: var(--text); font-family: inherit; margin-bottom: 10px; }
     .gb-btn { padding: 8px 15px; border: 1px solid var(--border); background: var(--btn-bg); color: var(--text); cursor: pointer; font-weight: bold; font-family: inherit; box-shadow: inset 1px 1px 0 var(--btn-hi), inset 2px 2px 0 var(--btn-hi2), inset -1px -1px 0 var(--btn-lo), inset -2px -2px 0 var(--btn-lo2); }
@@ -1504,7 +1538,7 @@ async function serveHomepage(request, env) {
             ${posts.slice(0, 3).map((post) => `
               <div class="post-card">
                 <div class="post-title">${escapeHtml(post.title)}</div>
-                <div class="post-date">${new Date(post.created_at).toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" })}</div>
+                <div class="post-date">${new Date(post.created_at).toLocaleString("zh-CN")}</div>
                 <div class="post-content markdown-body">${g.parse(post.content)}</div>
                 ${post.image_url ? `<img src="${post.image_url}" class="post-image" alt="${escapeHtml(post.title)}">` : ""}
               </div>
@@ -1522,7 +1556,7 @@ async function serveHomepage(request, env) {
             ${posts.map((post) => `
               <div class="post-card">
                 <div class="post-title">${escapeHtml(post.title)}</div>
-                <div class="post-date">${new Date(post.created_at).toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" })}</div>
+                <div class="post-date">${new Date(post.created_at).toLocaleString("zh-CN")}</div>
                 <div class="post-content markdown-body">${g.parse(post.content)}</div>
                 ${post.image_url ? `<img src="${post.image_url}" class="post-image" alt="${escapeHtml(post.title)}">` : ""}
               </div>
@@ -1543,12 +1577,11 @@ async function serveHomepage(request, env) {
         ${section === "guestbook" ? `
           <div class="guestbook-section">
             <h2>\u4E92\u52A8\u7559\u8A00\u5899</h2>
-            <div style="background: var(--bg2); padding: 10px; border: 1px solid var(--border); margin-bottom: 10px; box-shadow: inset 1px 1px 0 var(--btn-hi), inset -1px -1px 0 var(--btn-lo);">
-              <form id="guestbookForm" onsubmit="submitGuestbook(event)" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <label style="font-weight: bold; white-space: nowrap;">\u5199\u4FBF\u5229\u8D34:</label>
-                <input type="text" id="gbAuthor" placeholder="\u4F60\u7684\u6635\u79F0" required class="input-field" style="width: 120px; height: 30px;">
-                <input type="text" id="gbMessage" placeholder="\u60F3\u8BF4\u70B9\u4EC0\u4E48\uFF1F" required class="input-field" style="flex: 1; min-width: 200px; height: 30px;">
-                <button type="submit" class="btn" style="height: 30px; line-height: 28px; padding: 0 15px;">\u8D34\u4E0A\u5899</button>
+            <div style="display: flex; gap: 10px; align-items: flex-end; margin-bottom: 10px;">
+              <form id="guestbookForm" onsubmit="submitGuestbook(event)" style="display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap;">
+                <input type="text" id="gbAuthor" placeholder="\u4F60\u7684\u6635\u79F0" required class="input-field" style="width: 150px;">
+                <textarea id="gbMessage" placeholder="\u60F3\u8BF4\u70B9\u4EC0\u4E48\uFF1F\u7559\u4E0B\u4F60\u7684\u4FBF\u5229\u8D34\u5427\uFF01" required class="input-field" style="width: 300px; height: 32px; resize: vertical;"></textarea>
+                <button type="submit" class="btn" style="height: 32px;">\u8D34\u4E0A\u5899</button>
               </form>
             </div>
             <div class="guestbook-wall">
@@ -1562,7 +1595,7 @@ async function serveHomepage(request, env) {
                 <div class="sticky-note ${colorCls}" data-id="${g2.id}" style="left: ${x2}px; top: ${y2}px; transform: rotate(${rot}deg); z-index: ${z2};">
                   <div class="note-author">${escapeHtml(g2.author)}</div>
                   <div class="note-message">${escapeHtml(g2.message)}</div>
-                  <div class="note-date">${new Date(g2.created_at).toLocaleDateString("zh-CN", { timeZone: "Asia/Shanghai" })}</div>
+                  <div class="note-date">${new Date(g2.created_at).toLocaleDateString("zh-CN")}</div>
                 </div>
               `;
   }).join("")}
@@ -1629,48 +1662,37 @@ async function serveHomepage(request, env) {
         }
       }
 
-      // Drag and Drop Logic (Mouse + Touch)
+      // Drag and Drop Logic
       let activeNote = null;
       let offsetX = 0;
       let offsetY = 0;
 
-      function dragStart(e) {
-        if (window.innerWidth <= 800) return; // Disable drag on mobile
-        const target = e.target.closest('.sticky-note');
-        if (target) {
-          activeNote = target;
+      document.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.sticky-note')) {
+          activeNote = e.target.closest('.sticky-note');
           activeNote.style.zIndex = 1000;
           activeNote.style.transform = activeNote.style.transform.replace(/rotate\\([^\\)]+\\)/, 'rotate(0deg) scale(1.05)');
-          
-          const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-          const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-          
-          offsetX = clientX - activeNote.offsetLeft;
-          offsetY = clientY - activeNote.offsetTop;
+          offsetX = e.clientX - activeNote.offsetLeft;
+          offsetY = e.clientY - activeNote.offsetTop;
         }
-      }
+      });
 
-      function dragMove(e) {
+      document.addEventListener('mousemove', (e) => {
         if (!activeNote) return;
-        if (e.type.includes('touch')) e.preventDefault(); // Prevent scrolling while dragging note
-        
-        const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-        const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-        
-        let x = clientX - offsetX;
-        let y = clientY - offsetY;
+        let x = e.clientX - offsetX;
+        let y = e.clientY - offsetY;
         const wall = document.querySelector('.guestbook-wall');
         
         if (wall) {
-          x = Math.max(0, Math.min(x, wall.scrollWidth - activeNote.offsetWidth));
-          y = Math.max(0, Math.min(y, wall.scrollHeight - activeNote.offsetHeight));
+          x = Math.max(0, Math.min(x, wall.clientWidth - activeNote.offsetWidth));
+          y = Math.max(0, Math.min(y, wall.clientHeight - activeNote.offsetHeight));
         }
 
         activeNote.style.left = x + 'px';
         activeNote.style.top = y + 'px';
-      }
+      });
 
-      async function dragEnd(e) {
+      document.addEventListener('mouseup', async (e) => {
         if (activeNote) {
           const rot = Math.floor(Math.random() * 10) - 5;
           activeNote.style.transform = \`rotate(\${rot}deg)\`;
@@ -1691,15 +1713,7 @@ async function serveHomepage(request, env) {
             });
           } catch (err) { console.error('Failed to save position'); }
         }
-      }
-
-      document.addEventListener('mousedown', dragStart);
-      document.addEventListener('mousemove', dragMove);
-      document.addEventListener('mouseup', dragEnd);
-
-      document.addEventListener('touchstart', dragStart, {passive: false});
-      document.addEventListener('touchmove', dragMove, {passive: false});
-      document.addEventListener('touchend', dragEnd);
+      });
   <\/script>
 
 </body>
@@ -1708,6 +1722,7 @@ async function serveHomepage(request, env) {
     headers: { "Content-Type": "text/html;charset=UTF-8", "Cache-Control": "no-cache, no-store, must-revalidate" }
   });
 }
+__name(serveHomepage, "serveHomepage");
 
 // admin.js
 async function serveAdminPanel(request, env) {
@@ -2162,7 +2177,7 @@ async function serveAdminPanel(request, env) {
           <div class="post-item">
             <div class="post-item-info">
               <h3>\${escapeHtml(post.title)}</h3>
-              <p>\${new Date(post.created_at).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}</p>
+              <p>\${new Date(post.created_at).toLocaleString('zh-CN')}</p>
             </div>
             <div>
               <button class="btn btn-small" onclick="editPost(\${post.id})">\u7F16\u8F91</button>
@@ -2180,7 +2195,7 @@ async function serveAdminPanel(request, env) {
         const gbBody = document.getElementById('guestbookTableBody');
         gbBody.innerHTML = guestbookData.map(g => \`
           <tr>
-            <td>\${new Date(g.created_at).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}</td>
+            <td>\${new Date(g.created_at).toLocaleString('zh-CN')}</td>
             <td>\${escapeHtml(g.author)}</td>
             <td>\${escapeHtml(g.message).substring(0,30)}\${g.message.length>30?'...':''}</td>
             <td>
@@ -2199,7 +2214,7 @@ async function serveAdminPanel(request, env) {
         const logBody = document.getElementById('logTableBody');
         logBody.innerHTML = logsData.map(l => \`
           <tr>
-            <td>\${new Date(l.created_at).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}</td>
+            <td>\${new Date(l.created_at).toLocaleString('zh-CN')}</td>
             <td>\${escapeHtml(l.level)}</td>
             <td title="\${escapeHtml(l.message)}">\${escapeHtml(l.message).substring(0,50)}...</td>
           </tr>
@@ -2297,7 +2312,7 @@ async function serveAdminPanel(request, env) {
         const visitBody = document.getElementById('visitTableBody');
         visitBody.innerHTML = visitsData.map(v => \`
           <tr onclick="showVisitDetails('\${v.id}')" style="cursor: pointer;" title="\u70B9\u51FB\u67E5\u770B\u8BE6\u60C5">
-            <td>\${new Date(v.visit_time).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}</td>
+            <td>\${new Date(v.visit_time).toLocaleString('zh-CN')}</td>
             <td>\${escapeHtml(v.path)}</td>
             <td>\${escapeHtml(v.ip)}</td>
             <td>\${escapeHtml(v.user_agent).substring(0,30)}...</td>
@@ -2313,7 +2328,7 @@ async function serveAdminPanel(request, env) {
       const v = visitsData.find(x => x.id == id);
       if (!v) return;
       const details = \`
-        <p><strong>\u8BBF\u95EE\u65F6\u95F4\uFF1A</strong> \${new Date(v.visit_time).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}</p>
+        <p><strong>\u8BBF\u95EE\u65F6\u95F4\uFF1A</strong> \${new Date(v.visit_time).toLocaleString('zh-CN')}</p>
         <p><strong>\u8DEF\u5F84\uFF1A</strong> \${escapeHtml(v.path)}</p>
         <p><strong>IP\uFF1A</strong> \${escapeHtml(v.ip)}</p>
         <p><strong>\u8BBE\u5907 (User-Agent)\uFF1A</strong></p>
@@ -2577,6 +2592,7 @@ async function serveAdminPanel(request, env) {
     headers: { "Content-Type": "text/html;charset=UTF-8", "Cache-Control": "no-cache, no-store, must-revalidate" }
   });
 }
+__name(serveAdminPanel, "serveAdminPanel");
 
 // worker.js
 var worker_default = {
@@ -2850,6 +2866,8 @@ async function handleApi(request, env, pathname) {
   }
   return new Response("API endpoint not found", { status: 404 });
 }
+__name(handleApi, "handleApi");
 export {
   worker_default as default
 };
+//# sourceMappingURL=worker.js.map

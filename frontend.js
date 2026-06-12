@@ -1,17 +1,23 @@
 import { escapeHtml } from "./utils.js";
+import { marked } from "marked";
 
 export 
 async function serveHomepage(request, env) {
   const url = new URL(request.url);
   const section = url.searchParams.get('section') || 'home';
 
-  // 获取文章
-  const postsResult = await env.DB.prepare('SELECT * FROM posts ORDER BY created_at DESC').all();
-  const posts = postsResult.results || [];
+  let posts = [];
+  if (['home', 'posts', 'gallery'].includes(section)) {
+    const postsResult = await env.DB.prepare('SELECT * FROM posts ORDER BY created_at DESC').all();
+    posts = postsResult.results || [];
+  }
 
   // 获取留言
-  const guestbookResult = await env.DB.prepare('SELECT * FROM guestbook ORDER BY created_at DESC').all();
-  const guestbook = guestbookResult.results || [];
+  let guestbook = [];
+  if (section === 'guestbook') {
+    const guestbookResult = await env.DB.prepare('SELECT * FROM guestbook ORDER BY created_at DESC').all();
+    guestbook = guestbookResult.results || [];
+  }
 
   // 获取设置
   const settingsResult = await env.DB.prepare('SELECT key, value FROM settings').all();
@@ -66,7 +72,7 @@ async function serveHomepage(request, env) {
     }
 
     body {
-      font-family: "Chicago", "Geneva", "Monaco", "Courier New", monospace;
+      font-family: "Chicago", "Geneva", "Monaco", "Courier New", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
       background: var(--bg);
       color: var(--text);
       height: 100vh;
@@ -142,9 +148,39 @@ async function serveHomepage(request, env) {
     .post-card { background: var(--bg); border: 1px solid var(--border2); padding: 20px; margin-bottom: 20px; box-shadow: inset 1px 1px 0 var(--border2), inset -1px -1px 0 #000; }
     .post-title { font-size: 1.5rem; color: var(--text2); margin-bottom: 10px; font-weight: bold; }
     .post-date { font-size: 0.9rem; color: var(--text3); margin-bottom: 15px; }
-    .post-content { line-height: 1.6; white-space: pre-wrap; font-family: "Courier New", monospace; }
+    .post-content { line-height: 1.6; white-space: normal; font-family: "Courier New", monospace; }
     .post-image { max-width: 100%; max-height: 400px; object-fit: contain; border: 1px solid #000; border-radius: 8px; margin-top: 15px; display: block; }
+
+    /* Markdown Styles */
+    .markdown-body { font-family: "Courier New", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", monospace; line-height: 1.6; }
+    .markdown-body p { margin-bottom: 10px; }
+    .markdown-body h1, .markdown-body h2, .markdown-body h3 { color: var(--text2); margin-top: 15px; margin-bottom: 10px; border-bottom: 1px dashed var(--border2); padding-bottom: 5px;}
+    .markdown-body a { color: var(--text2); text-decoration: underline; cursor: pointer; }
+    .markdown-body pre { background: var(--bg3); border: 1px solid var(--border); padding: 10px; overflow-x: auto; margin-bottom: 15px; box-shadow: inset 1px 1px 0 var(--border2); }
+    .markdown-body code { background: var(--bg2); padding: 2px 4px; font-family: monospace; border: 1px solid var(--border2); }
+    .markdown-body pre code { background: transparent; padding: 0; border: none; }
+    .markdown-body blockquote { border-left: 4px solid var(--text2); padding-left: 10px; margin-left: 0; color: var(--text3); font-style: italic; background: var(--bg2); padding: 5px 10px; }
+    .markdown-body ul, .markdown-body ol { padding-left: 25px; margin-bottom: 15px; }
+    .markdown-body img { max-width: 100%; border: 1px solid #000; box-shadow: 2px 2px 0 #000; display: block; margin: 10px 0; }
+
+    /* Guestbook Sticky Notes Wall */
+    .guestbook-wall { position: relative; width: 100%; height: 600px; background: var(--bg3); border: 2px inset var(--border2); overflow: auto; margin-top: 15px; background-image: radial-gradient(var(--border) 1px, transparent 1px); background-size: 20px 20px; touch-action: pan-x pan-y; }
+    .sticky-note { position: absolute; width: 160px; padding: 15px; box-shadow: 3px 3px 5px rgba(0,0,0,0.3); cursor: grab; user-select: none; font-family: 'Comic Sans MS', 'Chalkboard SE', 'Kaiti SC', 'KaiTi', 'STKaiti', cursive, sans-serif; font-size: 15px; transform-origin: top center; transition: box-shadow 0.2s; word-wrap: break-word; touch-action: none; }
+    .sticky-note:active { cursor: grabbing; box-shadow: 6px 6px 10px rgba(0,0,0,0.4); z-index: 1000 !important; }
+    .sticky-note::before { content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 60px; height: 20px; background: rgba(255, 255, 255, 0.4); box-shadow: 0 1px 2px rgba(0,0,0,0.2); border-radius: 2px; }
+    .note-yellow { background-color: #fdfd96; color: #333; }
+    .note-pink { background-color: #ffb7b2; color: #333; }
+    .note-blue { background-color: #a2cffe; color: #333; }
+    .note-green { background-color: #b5ead7; color: #333; }
+    .note-author { font-weight: bold; margin-bottom: 8px; border-bottom: 1px dashed rgba(0,0,0,0.2); padding-bottom: 3px; font-size: 15px; }
+    .note-date { font-size: 11px; color: rgba(0,0,0,0.5); text-align: right; margin-top: 10px; }
     
+    @media(max-width:800px) {
+      .guestbook-wall { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px 0; height: auto; max-height: 80vh; }
+      .sticky-note { position: static !important; transform: none !important; margin: 0 auto; cursor: default; touch-action: auto; width: 80%; max-width: 300px; }
+      .sticky-note:active { cursor: default; box-shadow: 3px 3px 5px rgba(0,0,0,0.3) !important; z-index: auto !important; }
+    }
+
     .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
     .gallery-item { border: 1px solid var(--border2); background: var(--bg4); padding: 5px; cursor: pointer; transition: transform 0.2s; }
     .gallery-item:hover { transform: scale(1.02); border-color: var(--text2); }
@@ -158,6 +194,8 @@ async function serveHomepage(request, env) {
     .sidebar-btn.active { background: var(--text); color: var(--bg); box-shadow: inset 2px 2px 0 var(--bg2); }
 
     /* Guestbook */
+    .input-field { padding: 4px 8px; border: 1px solid var(--border); background: var(--bg3); color: var(--text); font-family: inherit; font-size: 14px; box-shadow: inset 1px 1px 2px rgba(0,0,0,0.4); outline: none; transition: background 0.2s; }
+    .input-field:focus { background: var(--bg); border-color: var(--text2); }
     .guestbook-form { border: 2px solid var(--text); padding: 15px; margin-bottom: 20px; background: var(--bg2); }
     .gb-input, .gb-textarea { width: 100%; padding: 8px; border: 1px solid #000; background: var(--bg3); color: var(--text); font-family: inherit; margin-bottom: 10px; }
     .gb-btn { padding: 8px 15px; border: 1px solid var(--border); background: var(--btn-bg); color: var(--text); cursor: pointer; font-weight: bold; font-family: inherit; box-shadow: inset 1px 1px 0 var(--btn-hi), inset 2px 2px 0 var(--btn-hi2), inset -1px -1px 0 var(--btn-lo), inset -2px -2px 0 var(--btn-lo2); }
@@ -209,8 +247,8 @@ async function serveHomepage(request, env) {
             ${posts.slice(0, 3).map(post => `
               <div class="post-card">
                 <div class="post-title">${escapeHtml(post.title)}</div>
-                <div class="post-date">${new Date(post.created_at).toLocaleString('zh-CN')}</div>
-                <div class="post-content">${escapeHtml(post.content).substring(0, 200)}${post.content.length > 200 ? '...' : ''}</div>
+                <div class="post-date">${new Date(post.created_at).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}</div>
+                <div class="post-content markdown-body">${marked.parse(post.content)}</div>
                 ${post.image_url ? `<img src="${post.image_url}" class="post-image" alt="${escapeHtml(post.title)}">` : ''}
               </div>
             `).join('')}
@@ -227,8 +265,8 @@ async function serveHomepage(request, env) {
             ${posts.map(post => `
               <div class="post-card">
                 <div class="post-title">${escapeHtml(post.title)}</div>
-                <div class="post-date">${new Date(post.created_at).toLocaleString('zh-CN')}</div>
-                <div class="post-content">${escapeHtml(post.content)}</div>
+                <div class="post-date">${new Date(post.created_at).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}</div>
+                <div class="post-content markdown-body">${marked.parse(post.content)}</div>
                 ${post.image_url ? `<img src="${post.image_url}" class="post-image" alt="${escapeHtml(post.title)}">` : ''}
               </div>
             `).join('')}
@@ -246,21 +284,31 @@ async function serveHomepage(request, env) {
         ` : ''}
 
         ${section === 'guestbook' ? `
-          <div class="guestbook-form">
-            <h3 style="margin-bottom:10px">留个言吧 (Leave a message)</h3>
-            <input type="text" id="gbAuthor" class="gb-input" placeholder="你的昵称 (Your name)" maxlength="30">
-            <textarea id="gbMessage" class="gb-textarea" placeholder="想说点什么？ (What's on your mind?)" rows="3" maxlength="300"></textarea>
-            <button class="gb-btn" onclick="submitGuestbook()">提交留言 (Submit)</button>
-          </div>
-          <div class="guestbook-list">
-            ${guestbook.map(gb => `
-              <div class="gb-entry">
-                <span class="gb-author">${escapeHtml(gb.author)}</span>
-                <span class="gb-date">${new Date(gb.created_at).toLocaleString('zh-CN')}</span>
-                <div class="gb-msg">${escapeHtml(gb.message)}</div>
-              </div>
-            `).join('')}
-            ${guestbook.length === 0 ? '<p>暂无留言。(No messages yet)</p>' : ''}
+          <div class="guestbook-section">
+            <h2>互动留言墙</h2>
+            <div style="background: var(--bg2); padding: 10px; border: 1px solid var(--border); margin-bottom: 10px; box-shadow: inset 1px 1px 0 var(--btn-hi), inset -1px -1px 0 var(--btn-lo);">
+              <form id="guestbookForm" onsubmit="submitGuestbook(event)" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <label style="font-weight: bold; white-space: nowrap;">写便利贴:</label>
+                <input type="text" id="gbAuthor" placeholder="你的昵称" required class="input-field" style="width: 120px; height: 30px;">
+                <input type="text" id="gbMessage" placeholder="想说点什么？" required class="input-field" style="flex: 1; min-width: 200px; height: 30px;">
+                <button type="submit" class="btn" style="height: 30px; line-height: 28px; padding: 0 15px;">贴上墙</button>
+              </form>
+            </div>
+            <div class="guestbook-wall">
+              ${guestbook.map(g => {
+                const colorCls = 'note-' + (g.color || 'yellow');
+                const x = g.x >= 0 ? g.x : Math.floor(Math.random() * 300);
+                const y = g.y >= 0 ? g.y : Math.floor(Math.random() * 400);
+                const rot = Math.floor(Math.random() * 10) - 5;
+                const z = Math.floor(Math.random() * 10) + 1;
+                return `
+                <div class="sticky-note ${colorCls}" data-id="${g.id}" style="left: ${x}px; top: ${y}px; transform: rotate(${rot}deg); z-index: ${z};">
+                  <div class="note-author">${escapeHtml(g.author)}</div>
+                  <div class="note-message">${escapeHtml(g.message)}</div>
+                  <div class="note-date">${new Date(g.created_at).toLocaleDateString('zh-CN', { timeZone: 'Asia/Shanghai' })}</div>
+                </div>
+              `}).join('')}
+            </div>
           </div>
         ` : ''}
 
@@ -268,7 +316,7 @@ async function serveHomepage(request, env) {
           <div class="about-section">
             <h2>${escapeHtml(aboutTitle)}</h2>
             ${aboutImageUrl ? `<div style="text-align: center; margin-bottom: 20px;"><img src="${escapeHtml(aboutImageUrl)}" style="max-width: 100%; border: 1px solid #000; box-shadow: 2px 2px 0 #000;" alt="About Image"></div>` : ''}
-            <div style="font-size: 16px; line-height: 1.6; white-space: pre-wrap;">${aboutContent}</div>
+            <div class="markdown-body" style="font-size: 16px;">${marked.parse(aboutContent)}</div>
           </div>
         ` : ''}
       </div>
@@ -279,7 +327,6 @@ async function serveHomepage(request, env) {
     // Theme toggle
     const themeToggle = document.getElementById('themeToggle');
     const savedTheme = localStorage.getItem('macTheme');
-    // Default is light, only add dark-mode if saved as dark
     if (savedTheme === 'dark') {
       document.body.classList.add('dark-mode');
     }
@@ -292,30 +339,109 @@ async function serveHomepage(request, env) {
       }
     });
 
+    async function submitGuestbook(e) {
+        e.preventDefault();
+        const btn = e.target.querySelector('button');
+        btn.disabled = true;
+        btn.textContent = '提交中...';
+        
+        const colors = ['yellow', 'pink', 'blue', 'green'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        const wall = document.querySelector('.guestbook-wall');
+        const x = wall ? wall.clientWidth / 2 - 80 + (Math.random() * 40 - 20) : 100;
+        const y = wall ? wall.clientHeight / 2 - 80 + (Math.random() * 40 - 20) : 100;
 
-    async function submitGuestbook() {
-      const author = document.getElementById('gbAuthor').value.trim();
-      const message = document.getElementById('gbMessage').value.trim();
-      if (!author || !message) {
-        alert('昵称和留言不能为空！');
-        return;
-      }
-      try {
         const res = await fetch('/api/guestbook', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ author, message })
+          body: JSON.stringify({
+            author: document.getElementById('gbAuthor').value,
+            message: document.getElementById('gbMessage').value,
+            x: Math.floor(x),
+            y: Math.floor(y),
+            color: randomColor
+          })
         });
         if (res.ok) {
           window.location.reload();
         } else {
           alert('提交失败');
+          btn.disabled = false;
+          btn.textContent = '贴上墙';
         }
-      } catch (err) {
-        console.error(err);
-        alert('提交失败');
       }
-    }
+
+      // Drag and Drop Logic (Mouse + Touch)
+      let activeNote = null;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      function dragStart(e) {
+        if (window.innerWidth <= 800) return; // Disable drag on mobile
+        const target = e.target.closest('.sticky-note');
+        if (target) {
+          activeNote = target;
+          activeNote.style.zIndex = 1000;
+          activeNote.style.transform = activeNote.style.transform.replace(/rotate\\([^\\)]+\\)/, 'rotate(0deg) scale(1.05)');
+          
+          const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+          const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+          
+          offsetX = clientX - activeNote.offsetLeft;
+          offsetY = clientY - activeNote.offsetTop;
+        }
+      }
+
+      function dragMove(e) {
+        if (!activeNote) return;
+        if (e.type.includes('touch')) e.preventDefault(); // Prevent scrolling while dragging note
+        
+        const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+        
+        let x = clientX - offsetX;
+        let y = clientY - offsetY;
+        const wall = document.querySelector('.guestbook-wall');
+        
+        if (wall) {
+          x = Math.max(0, Math.min(x, wall.scrollWidth - activeNote.offsetWidth));
+          y = Math.max(0, Math.min(y, wall.scrollHeight - activeNote.offsetHeight));
+        }
+
+        activeNote.style.left = x + 'px';
+        activeNote.style.top = y + 'px';
+      }
+
+      async function dragEnd(e) {
+        if (activeNote) {
+          const rot = Math.floor(Math.random() * 10) - 5;
+          activeNote.style.transform = \`rotate(\${rot}deg)\`;
+          activeNote.style.zIndex = Math.floor(Math.random() * 10) + 1;
+          
+          const id = activeNote.dataset.id;
+          const x = parseInt(activeNote.style.left);
+          const y = parseInt(activeNote.style.top);
+          
+          const noteToSave = activeNote;
+          activeNote = null; 
+          
+          try {
+            await fetch(\`/api/guestbook/\${id}/position\`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ x, y })
+            });
+          } catch (err) { console.error('Failed to save position'); }
+        }
+      }
+
+      document.addEventListener('mousedown', dragStart);
+      document.addEventListener('mousemove', dragMove);
+      document.addEventListener('mouseup', dragEnd);
+
+      document.addEventListener('touchstart', dragStart, {passive: false});
+      document.addEventListener('touchmove', dragMove, {passive: false});
+      document.addEventListener('touchend', dragEnd);
   </script>
 
 </body>

@@ -21,6 +21,12 @@ export function getCookie(request, name) {
   return null;
 }
 
+export function setCookie(response, name, value, days = 7) {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  const cookieString = `${name}=${value}; expires=${expires}; path=/; HttpOnly; SameSite=Lax`;
+  response.headers.append('Set-Cookie', cookieString);
+}
+
 export function isAuthenticated(request) {
   const token = getCookie(request, 'admin_token');
   return token === 'secret-admin-token';

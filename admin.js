@@ -19,25 +19,7 @@ async function serveAdminPanel(request, env) {
   let aboutImageUrl = settingsMap['about_image_url'] || '';
   let musicPlayerCode = settingsMap['music_player_code'] || '';
 
-  // 获取数据统计
-  const postsResult = await env.DB.prepare('SELECT * FROM posts ORDER BY created_at DESC').all();
-  const posts = postsResult.results || [];
-  
-  const visitsResult = await env.DB.prepare('SELECT * FROM visits ORDER BY visit_time DESC LIMIT 100').all();
-  const visits = visitsResult.results || [];
 
-  const logsResult = await env.DB.prepare('SELECT * FROM logs ORDER BY created_at DESC LIMIT 50').all();
-  const logs = logsResult.results || [];
-
-  const gbResult = await env.DB.prepare('SELECT * FROM guestbook ORDER BY created_at DESC').all();
-  const guestbook = gbResult.results || [];
-
-  // 聚合统计
-  const totalVisits = await env.DB.prepare('SELECT COUNT(*) as count FROM visits').first('count');
-  const uniqueIPs = await env.DB.prepare('SELECT COUNT(DISTINCT ip) as count FROM visits').first('count');
-  
-  const topPagesResult = await env.DB.prepare('SELECT path, COUNT(*) as count FROM visits GROUP BY path ORDER BY count DESC LIMIT 5').all();
-  const topPages = topPagesResult.results || [];
 
   const html = `<!DOCTYPE html>
 <html lang="zh-CN">
@@ -380,16 +362,11 @@ async function serveAdminPanel(request, env) {
         .replace(/'/g, "&#039;");
     }
     // 注入初始数据
-    const stats = {
-      totalVisits: ${totalVisits},
-      uniqueIPs: ${uniqueIPs},
-      totalPosts: ${posts.length},
-      topPages: ${JSON.stringify(topPages)}
-    };
-    const postsData = ${JSON.stringify(posts)};
-    const visitsData = ${JSON.stringify(visits)};
-    const logsData = ${JSON.stringify(logs)};
-    const guestbookData = ${JSON.stringify(guestbook)};
+    let stats = { totalVisits: 0, uniqueIPs: 0, totalPosts: 0, topPages: [] };
+    let postsData = [];
+    let visitsData = [];
+    let logsData = [];
+    let guestbookData = [];
     const currentSettings = {
       site_title: \`${siteTitle.replace(/`/g, "\\`")}\`,
       site_subtitle: \`${siteSubtitle.replace(/`/g, "\\`")}\`,
@@ -413,7 +390,8 @@ async function serveAdminPanel(request, env) {
       document.getElementById('loginView').style.display = 'none';
       document.getElementById('menuBar').style.display = 'flex';
       document.getElementById('dashboardView').style.display = 'flex';
-      renderData();
+      renderSettings();
+      switchTab('postsTab');
     }
 
     async function login() {
@@ -440,15 +418,26 @@ async function serveAdminPanel(request, env) {
       location.reload();
     }
 
-    let switchTab = function(tabId) {
+    let switchTab = async function(tabId) {
       document.querySelectorAll('.panel-tab').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       if (event && event.target) {
         event.target.classList.add('active');
       }
       document.getElementById(tabId).classList.add('active');
+      
       if (tabId === 'imagesTab') {
         loadImages();
+      } else if (tabId === 'postsTab') {
+        await refreshPosts();
+      } else if (tabId === 'statsTab') {
+        await refreshStats();
+      } else if (tabId === 'visitsTab') {
+        await refreshVisits();
+      } else if (tabId === 'guestbookTab') {
+        await refreshGuestbook();
+      } else if (tabId === 'logsTab') {
+        await refreshLogs();
       }
     };
 
@@ -459,75 +448,62 @@ async function serveAdminPanel(request, env) {
       setTimeout(() => { el.className = 'message'; }, 3000);
     }
 
-    function renderData() {
-      // Stats
-      document.getElementById('statTotalVisits').textContent = stats.totalVisits;
-      document.getElementById('statUniqueIPs').textContent = stats.uniqueIPs;
-      document.getElementById('statTotalPosts').textContent = stats.totalPosts;
-      
-      const pagesDiv = document.getElementById('topPagesList');
-      if (stats.topPages.length > 0) {
-        pagesDiv.innerHTML = stats.topPages.map(page => \`
-          <div style="display:flex; justify-content:space-between; border-bottom:1px solid #ccc; padding:5px 0;">
-            <span>\${escapeHtml(page.path)}</span>
-            <span style="font-weight:bold;">\${escapeHtml(String(page.count))} 次</span>
+    // Helper functions for dynamic fetching
+    async function refreshPosts() {
+      try {
+        const res = await fetch('/api/posts');
+        postsData = await res.json() || [];
+        const postList = document.getElementById('postList');
+        postList.innerHTML = postsData.map(post => \`
+          <div class="post-item">
+            <div class="post-item-info">
+              <h3>\${escapeHtml(post.title)}</h3>
+              <p>\${new Date(post.created_at).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}</p>
+            </div>
+            <div>
+              <button class="btn btn-small" onclick="editPost(\${post.id})">编辑</button>
+              <button class="btn btn-small" onclick="deletePost(\${post.id})">删除</button>
+            </div>
           </div>
         \`).join('');
-      } else {
-        pagesDiv.innerHTML = '<p>暂无数据</p>';
-      }
+      } catch (e) { console.error('Failed to fetch posts', e); }
+    }
 
-      // Posts
-      const postList = document.getElementById('postList');
-      postList.innerHTML = postsData.map(post => \`
-        <div class="post-item">
-          <div class="post-item-info">
-            <h3>\${escapeHtml(post.title)}</h3>
-            <p>\${new Date(post.created_at).toLocaleString('zh-CN')}</p>
-          </div>
-          <div>
-            <button class="btn btn-small" onclick="editPost(\${post.id})">编辑</button>
-            <button class="btn btn-small" onclick="deletePost(\${post.id})">删除</button>
-          </div>
-        </div>
-      \`).join('');
+    async function refreshGuestbook() {
+      try {
+        const res = await fetch('/api/guestbook'); // Note: worker.js doesn't have GET /api/guestbook! We must fix worker.js too!
+        guestbookData = await res.json() || [];
+        const gbBody = document.getElementById('guestbookTableBody');
+        gbBody.innerHTML = guestbookData.map(g => \`
+          <tr>
+            <td>\${new Date(g.created_at).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}</td>
+            <td>\${escapeHtml(g.author)}</td>
+            <td>\${escapeHtml(g.message).substring(0,30)}\${g.message.length>30?'...':''}</td>
+            <td>
+              <button class="btn btn-small" onclick="editGuestbook(\${g.id})">编辑</button>
+              <button class="btn btn-small" onclick="deleteGuestbook(\${g.id})">删除</button>
+            </td>
+          </tr>
+        \`).join('');
+      } catch (e) { console.error('Failed to fetch guestbook', e); }
+    }
 
-      // Visits
-      const visitBody = document.getElementById('visitTableBody');
-      visitBody.innerHTML = visitsData.map(v => \`
-        <tr onclick="showVisitDetails('\${v.id}')" style="cursor: pointer;" title="点击查看详情">
-          <td>\${new Date(v.visit_time).toLocaleString('zh-CN')}</td>
-          <td>\${escapeHtml(v.path)}</td>
-          <td>\${escapeHtml(v.ip)}</td>
-          <td title="\${escapeHtml(v.user_agent)}">\${escapeHtml(v.user_agent).substring(0,30)}...</td>
-        </tr>
-      \`).join('');
+    async function refreshLogs() {
+      try {
+        const res = await fetch('/api/logs');
+        logsData = await res.json() || [];
+        const logBody = document.getElementById('logTableBody');
+        logBody.innerHTML = logsData.map(l => \`
+          <tr>
+            <td>\${new Date(l.created_at).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}</td>
+            <td>\${escapeHtml(l.level)}</td>
+            <td title="\${escapeHtml(l.message)}">\${escapeHtml(l.message).substring(0,50)}...</td>
+          </tr>
+        \`).join('');
+      } catch (e) { console.error('Failed to fetch logs', e); }
+    }
 
-      // Guestbook
-      const gbBody = document.getElementById('guestbookTableBody');
-      gbBody.innerHTML = guestbookData.map(g => \`
-        <tr>
-          <td>\${new Date(g.created_at).toLocaleString('zh-CN')}</td>
-          <td>\${escapeHtml(g.author)}</td>
-          <td>\${escapeHtml(g.message).substring(0,30)}\${g.message.length>30?'...':''}</td>
-          <td>
-            <button class="btn btn-small" onclick="editGuestbook(\${g.id})">编辑</button>
-            <button class="btn btn-small" onclick="deleteGuestbook(\${g.id})">删除</button>
-          </td>
-        </tr>
-      \`).join('');
-
-      // Logs
-      const logBody = document.getElementById('logTableBody');
-      logBody.innerHTML = logsData.map(l => \`
-        <tr>
-          <td>\${new Date(l.created_at).toLocaleString('zh-CN')}</td>
-          <td>\${escapeHtml(l.level)}</td>
-          <td title="\${escapeHtml(l.message)}">\${escapeHtml(l.message).substring(0,50)}...</td>
-        </tr>
-      \`).join('');
-
-      // Settings
+    function renderSettings() {
       document.getElementById('siteTitleInput').value = currentSettings.site_title;
       document.getElementById('siteSubtitleInput').value = currentSettings.site_subtitle;
       document.getElementById('windowTitleInput').value = currentSettings.window_title;
@@ -617,7 +593,7 @@ async function serveAdminPanel(request, env) {
         const visitBody = document.getElementById('visitTableBody');
         visitBody.innerHTML = visitsData.map(v => \`
           <tr onclick="showVisitDetails('\${v.id}')" style="cursor: pointer;" title="点击查看详情">
-            <td>\${new Date(v.visit_time).toLocaleString('zh-CN')}</td>
+            <td>\${new Date(v.visit_time).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}</td>
             <td>\${escapeHtml(v.path)}</td>
             <td>\${escapeHtml(v.ip)}</td>
             <td>\${escapeHtml(v.user_agent).substring(0,30)}...</td>
@@ -633,7 +609,7 @@ async function serveAdminPanel(request, env) {
       const v = visitsData.find(x => x.id == id);
       if (!v) return;
       const details = \`
-        <p><strong>访问时间：</strong> \${new Date(v.visit_time).toLocaleString('zh-CN')}</p>
+        <p><strong>访问时间：</strong> \${new Date(v.visit_time).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}</p>
         <p><strong>路径：</strong> \${escapeHtml(v.path)}</p>
         <p><strong>IP：</strong> \${escapeHtml(v.ip)}</p>
         <p><strong>设备 (User-Agent)：</strong></p>
