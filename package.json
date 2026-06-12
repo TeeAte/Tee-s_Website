@@ -1,0 +1,12 @@
+{
+  "name": "cloudfare",
+  "version": "1.0.0",
+  "description": "",
+  "main": "worker.js",
+  "scripts": {
+    "build": "esbuild worker.js --bundle --outfile=dist/worker.js --format=esm --target=es2022"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1"
+  }
+}

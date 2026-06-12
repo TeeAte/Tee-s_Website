@@ -1,0 +1,14 @@
+name = "teeate"
+main = "worker.js"
+compatibility_date = "2024-05-12"
+workers_dev = true
+preview_urls = false
+
+[[d1_databases]]
+binding = "DB"
+database_name = "teeate-db"
+database_id = "8e473f8c-b3d1-42b9-9761-ce4c670fda54"
+
+[[kv_namespaces]]
+binding = "IMAGE_KV"
+id = "896dc066f89949aaaa71f5edb7d25056"
